@@ -1,0 +1,213 @@
+/* ================================
+   VASU KAUSHAL FOUNDATION - FINAL CSS
+   Complete Professional Theme
+================================ */
+
+/* ===== BASIC RESET ===== */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f6f9;
+  color: #222;
+}
+
+/* ================================
+   HEADER SECTION
+================================ */
+header {
+  background: linear-gradient(to right, #6a0000, #a00000);
+  color: white;
+  padding: 22px;
+  text-align: center;
+}
+
+/* Logo Top */
+header .logo {
+  width: 130px;
+  margin: 0 auto 12px;
+  display: block;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Title */
+header h1 {
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 1px;
+}
+
+/* Subtitle */
+header p {
+  margin: 8px 0 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* ================================
+   NAVIGATION MENU
+================================ */
+nav {
+  margin-top: 18px;
+}
+
+/* Nav Links */
+nav a {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  margin: 6px 10px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+/* Hover Effect Desktop */
+nav a:hover {
+  background: white;
+  color: #6a0000;
+  transform: scale(1.05);
+}
+
+/* ================================
+   HAMBURGER MENU BUTTON
+================================ */
+.menu-toggle {
+  display: none;
+  background: white;
+  color: #6a0000;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+.menu-toggle:hover {
+  background: #f2f2f2;
+}
+
+/* ================================
+   MAIN CARD SECTION
+================================ */
+.card {
+  background: white;
+  width: 88%;
+  max-width: 950px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 22px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Banner Image */
+.card img {
+  width: 100%;
+  border-radius: 18px;
+  margin-bottom: 18px;
+}
+
+/* Headings */
+h2 {
+  font-size: 26px;
+  margin: 18px 0;
+  color: #6a0000;
+}
+
+/* Paragraph */
+p {
+  font-size: 17px;
+  line-height: 1.9;
+  text-align: justify;
+  margin: 15px 0;
+}
+
+/* ================================
+   VIDEO SECTION
+================================ */
+video {
+  width: 100%;
+  border-radius: 18px;
+  margin-top: 18px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+  transition: 0.3s;
+}
+
+/* Video Hover Effect Desktop */
+video:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* ================================
+   FOOTER
+================================ */
+footer {
+  background: #6a0000;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  margin-top: 40px;
+  font-size: 15px;
+}
+
+/* ================================
+   MOBILE RESPONSIVE + HAMBURGER
+================================ */
+@media (max-width: 768px) {
+
+  /* Smaller Title */
+  header h1 {
+    font-size: 26px;
+  }
+
+  /* Show Hamburger Button */
+  .menu-toggle {
+    display: inline-block;
+  }
+
+  /* Hide Menu Initially */
+  nav {
+    display: none;
+    flex-direction: column;
+    margin-top: 15px;
+  }
+
+  /* Mobile Links */
+  nav a {
+    display: block;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 8px auto;
+    width: 85%;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  /* Mobile Hover */
+  nav a:hover {
+    background: white;
+    color: #6a0000;
+  }
+
+  /* Show Menu When Toggle */
+  nav.show {
+    display: flex;
+  }
+
+  /* Card Padding */
+  .card {
+    width: 92%;
+    padding: 20px;
+  }
+
+  /* Text Size */
+  p {
+    font-size: 16px;
+  }
+}
