@@ -6,82 +6,85 @@
 
   <title>Vasu Kaushal Foundation</title>
 
-  <!-- External CSS -->
+  <!-- ✅ Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- ✅ CSS File -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-<header>
+  <!-- ================= HEADER ================= -->
+  <header>
 
-  <!-- Logo -->
-  <img src="assets/logo.jpg" class="logo" alt="Foundation Logo">
+    <!-- ✅ Logo Top -->
+    <div class="topLogo">
+      <img src="assets/logo.jpg" alt="Vasu Kaushal Foundation Logo">
+    </div>
 
-  <h1>वसु कौशल फाउंडेशन</h1>
-  <p>सेवा • धर्म • समर्पण</p>
+    <h1>वसु कौशल फाउंडेशन</h1>
+    <p>सेवा • धर्म • समर्पण</p>
 
-  <!-- Hamburger Button (Mobile) -->
-  <div class="menu-toggle" onclick="toggleMenu()">
-    ☰ Menu
-  </div>
+    <!-- ✅ Navigation -->
+    <nav>
+      <a href="pages/gauseva.html">गौ सेवा</a>
+      <a href="pages/annseva.html">अन्न सेवा</a>
+      <a href="pages/prani.html">मूक प्राणी सेवा</a>
+      <a href="pages/gyanseva.html">ज्ञान सेवा</a>
+      <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
+      <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
+      <a href="pages/donate.html">Donate</a>
+    </nav>
 
-  <!-- Navigation Menu -->
-  <nav id="mobileMenu">
-    <a href="pages/gauseva.html">गौ सेवा</a>
-    <a href="pages/annseva.html">अन्न सेवा</a>
-    <a href="pages/prani.html">मूक प्राणी सेवा</a>
-    <a href="pages/gyanseva.html">ज्ञान सेवा</a>
-    <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
-    <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
-    <a href="pages/donate.html">Donate</a>
-  </nav>
+  </header>
 
-</header>
 
-<!-- ================= MAIN CONTENT ================= -->
-<section class="card">
+  <!-- ================= MAIN CARD ================= -->
+  <section class="card">
 
-  <!-- Banner -->
-  <img src="assets/homebanner.jpg" alt="Home Banner">
+    <!-- ✅ Banner Image -->
+    <img src="assets/homebanner.jpg" alt="Foundation Banner">
 
-  <h2>"अहिंसा परमो धर्मः"</h2>
+    <h2>"अहिंसा परमो धर्मः"</h2>
 
-  <p>
-    यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
-    प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
-    प्रत्येक जीव की रक्षा करना प्रत्येक मानवता का कर्तव्य है।
-  </p>
+    <p>
+      यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
+      प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
+      प्रत्येक जीव की रक्षा करना प्रत्येक मानवता का कर्तव्य है।
+    </p>
 
-  <p>
-    फाउंडेशन का निर्माण सभी जीवों के कष्ट दूर करने हेतु किया गया है।
-    सभी से विनम्र आग्रह है कि करुणाभाव रखते हुए पुण्य कार्यों में सहभागिता करें।
-  </p>
+    <p>
+      फाउंडेशन का निर्माण सभी जीवों के कष्ट दूर करने हेतु किया गया है।
+      सभी से विनम्र आग्रह है कि करुणाभाव रखते हुए पुण्य कार्यों में सहभागिता करें।
+    </p>
 
-  <hr>
+    <hr>
 
-  <!-- Video Section -->
-  <h2>हमारी सेवा का एक छोटा दृश्य</h2>
+    <!-- ================= VIDEO SECTION ================= -->
+    <h3>हमारी सेवा झलक</h3>
 
-  <video class="hoverVideo" muted>
-    <source src="assets/video.mp4" type="video/mp4">
-    आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
-  </video>
+    <!-- ✅ Hover Video -->
+    <video class="hoverVideo" muted poster="assets/homebanner.jpg">
+      <source src="assets/video.mp4" type="video/mp4">
+      आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
+    </video>
 
-</section>
+    <p style="text-align:center; font-size:15px;">
+      (Desktop पर video hover करने से चलेगा)
+    </p>
 
-<!-- ================= FOOTER ================= -->
-<footer>
-  © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
-</footer>
+  </section>
 
-<!-- ================= JAVASCRIPT FILES ================= -->
 
-<!-- Hamburger Menu JS -->
-<script src="js/script.js"></script>
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
+  </footer>
 
-<!-- Video Hover Play JS -->
-<script src="js/hover.js"></script>
+
+  <!-- ✅ Hover Video JS -->
+  <script src="js/hover.js"></script>
 
 </body>
 </html>
