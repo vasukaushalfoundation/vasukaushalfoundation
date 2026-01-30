@@ -3,24 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Vasu Kaushal Foundation</title>
 
+  <!-- Favicon -->
   <link rel="icon" href="favicon.ico">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header>
 
+    <!-- Logo -->
     <img src="assets/logo.jpg" class="logo" alt="Logo">
 
+    <!-- Title -->
     <h1>वसु कौशल फाउंडेशन</h1>
     <p>सेवा • धर्म • समर्पण</p>
 
+    <!-- Mobile Menu Button -->
     <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
 
+    <!-- Navigation -->
     <nav id="menu">
       <a href="pages/gauseva.html">गौ सेवा</a>
       <a href="pages/annseva.html">अन्न सेवा</a>
@@ -35,14 +43,16 @@
   </header>
 
 
-  <!-- MAIN CARD -->
+  <!-- ================= MAIN CONTENT ================= -->
   <section class="card">
 
     <!-- Banner -->
     <img src="assets/homebanner.jpg" alt="Banner">
 
+    <!-- Quote -->
     <h2>"अहिंसा परमो धर्मः"</h2>
 
+    <!-- Text -->
     <p>
       यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
       प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
@@ -56,24 +66,29 @@
 
     <hr>
 
-    <!-- Video -->
+    <!-- Video Section -->
     <h3>हमारी सेवा झलक</h3>
 
-    <video class="hoverVideo" muted>
+    <video class="hoverVideo" controls muted>
       <source src="assets/video.mp4" type="video/mp4">
+      आपका ब्राउज़र video support नहीं करता।
     </video>
 
   </section>
 
 
-  <!-- FOOTER -->
+  <!-- ================= FOOTER ================= -->
   <footer>
     © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
   </footer>
 
 
+  <!-- ================= JS ================= -->
+
+  <!-- Hover Video Script -->
   <script src="js/hover.js"></script>
 
+  <!-- Mobile Menu Toggle -->
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("show");
