@@ -3,31 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Vasu Kaushal Foundation</title>
 
-  <!-- ✅ Favicon -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-  <!-- ✅ CSS -->
+  <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
+  <!-- HEADER -->
   <header>
 
-    <!-- ✅ Logo Top -->
-    <img src="assets/logo.jpg" class="logo" alt="Vasu Kaushal Foundation Logo">
+    <img src="assets/logo.jpg" class="logo" alt="Logo">
 
     <h1>वसु कौशल फाउंडेशन</h1>
     <p>सेवा • धर्म • समर्पण</p>
 
-    <!-- ✅ Mobile Menu Button -->
     <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
 
-    <!-- ✅ Navigation -->
     <nav id="menu">
       <a href="pages/gauseva.html">गौ सेवा</a>
       <a href="pages/annseva.html">अन्न सेवा</a>
@@ -35,17 +28,18 @@
       <a href="pages/gyanseva.html">ज्ञान सेवा</a>
       <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
       <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
+      <a href="pages/sampark.html">संपर्क सूत्र</a>
       <a href="pages/donate.html">Donate</a>
     </nav>
 
   </header>
 
 
-  <!-- ================= MAIN CARD ================= -->
+  <!-- MAIN CARD -->
   <section class="card">
 
-    <!-- ✅ Banner -->
-    <img src="assets/homebanner.jpg" alt="Foundation Banner">
+    <!-- Banner -->
+    <img src="assets/homebanner.jpg" alt="Banner">
 
     <h2>"अहिंसा परमो धर्मः"</h2>
 
@@ -62,29 +56,24 @@
 
     <hr>
 
-    <!-- ================= VIDEO ================= -->
+    <!-- Video -->
     <h3>हमारी सेवा झलक</h3>
 
-    <video class="hoverVideo" muted poster="assets/homebanner.jpg">
+    <video class="hoverVideo" muted>
       <source src="assets/video.mp4" type="video/mp4">
-      आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
     </video>
-
-    <p class="note">(Desktop पर hover करने से video चलेगा)</p>
 
   </section>
 
 
-  <!-- ================= FOOTER ================= -->
+  <!-- FOOTER -->
   <footer>
     © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
   </footer>
 
 
-  <!-- ✅ Hover Video Script -->
   <script src="js/hover.js"></script>
 
-  <!-- ✅ Mobile Menu Script -->
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("show");
