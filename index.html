@@ -9,7 +9,7 @@
   <!-- ✅ Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <!-- ✅ CSS File -->
+  <!-- ✅ CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -19,15 +19,16 @@
   <header>
 
     <!-- ✅ Logo Top -->
-    <div class="topLogo">
-      <img src="assets/logo.jpg" alt="Vasu Kaushal Foundation Logo">
-    </div>
+    <img src="assets/logo.jpg" class="logo" alt="Vasu Kaushal Foundation Logo">
 
     <h1>वसु कौशल फाउंडेशन</h1>
     <p>सेवा • धर्म • समर्पण</p>
 
+    <!-- ✅ Mobile Menu Button -->
+    <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
+
     <!-- ✅ Navigation -->
-    <nav>
+    <nav id="menu">
       <a href="pages/gauseva.html">गौ सेवा</a>
       <a href="pages/annseva.html">अन्न सेवा</a>
       <a href="pages/prani.html">मूक प्राणी सेवा</a>
@@ -43,7 +44,7 @@
   <!-- ================= MAIN CARD ================= -->
   <section class="card">
 
-    <!-- ✅ Banner Image -->
+    <!-- ✅ Banner -->
     <img src="assets/homebanner.jpg" alt="Foundation Banner">
 
     <h2>"अहिंसा परमो धर्मः"</h2>
@@ -61,18 +62,15 @@
 
     <hr>
 
-    <!-- ================= VIDEO SECTION ================= -->
+    <!-- ================= VIDEO ================= -->
     <h3>हमारी सेवा झलक</h3>
 
-    <!-- ✅ Hover Video -->
     <video class="hoverVideo" muted poster="assets/homebanner.jpg">
       <source src="assets/video.mp4" type="video/mp4">
       आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
     </video>
 
-    <p style="text-align:center; font-size:15px;">
-      (Desktop पर video hover करने से चलेगा)
-    </p>
+    <p class="note">(Desktop पर hover करने से video चलेगा)</p>
 
   </section>
 
@@ -83,8 +81,15 @@
   </footer>
 
 
-  <!-- ✅ Hover Video JS -->
+  <!-- ✅ Hover Video Script -->
   <script src="js/hover.js"></script>
+
+  <!-- ✅ Mobile Menu Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("show");
+    }
+  </script>
 
 </body>
 </html>
