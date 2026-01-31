@@ -218,3 +218,53 @@ footer {
     font-size: 16px;
   }
 }
+
+/* Sparkling Download Button */
+.sparkle-btn {
+  position: relative;
+  display: inline-block;
+  background: #6a0000;
+  color: white;
+  padding: 14px 32px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+  transition: 0.3s;
+}
+
+.sparkle-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Sparkle Effect */
+.sparkle-btn .sparkle {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  transform: skewX(-20deg);
+}
+
+/* Sparkle Animation on Hover */
+.sparkle-btn:hover .sparkle {
+  animation: sparkleMove 0.8s linear;
+}
+
+@keyframes sparkleMove {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
