@@ -8,8 +8,28 @@
 <body>
 
 <header>
-  <h1>वृद्ध सेवा</h1>
+
+  <img src="../assets/logo.jpg" class="logo" alt="Logo">
+
+  <h1>वसु कौशल फाउंडेशन</h1>
+  <p>सेवा • धर्म • समर्पण</p>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
+
+  <nav id="menu">
+    <a href="../index.html">Home</a>
+    <a href="gauseva.html">गौ सेवा</a>
+    <a href="annseva.html">अन्न सेवा</a>
+    <a href="prani.html">मूक प्राणी सेवा</a>
+    <a href="gyanseva.html">ज्ञान सेवा</a>
+    <a href="vriddhseva.html">वृद्ध सेवा</a>
+    <a href="chikitsa.html">चिकित्सा सेवा</a>
+    <a href="sampark.html">संपर्क सूत्र</a>
+    <a href="donate.html">Donate</a>
+  </nav>
+
 </header>
+
 
 <section class="card">
 
@@ -18,6 +38,13 @@
   <h2>आइए बुजुर्गों के जीवन में मुस्कान लाएं</h2>
 
 </section>
+
+<script>
+  function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+  }
+</script>
+
 
 <footer>© Vasu Kaushal Foundation</footer>
 </body>

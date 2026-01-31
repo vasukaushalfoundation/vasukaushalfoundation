@@ -8,9 +8,28 @@
 <body>
 
 <header>
-  <h1>दान एवं सहयोग</h1>
-  <p>करुणा • सेवा • अहिंसा</p>
+
+  <img src="../assets/logo.jpg" class="logo" alt="Logo">
+
+  <h1>वसु कौशल फाउंडेशन</h1>
+  <p>सेवा • धर्म • समर्पण</p>
+
+  <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
+
+  <nav id="menu">
+    <a href="../index.html">Home</a>
+    <a href="gauseva.html">गौ सेवा</a>
+    <a href="annseva.html">अन्न सेवा</a>
+    <a href="prani.html">मूक प्राणी सेवा</a>
+    <a href="gyanseva.html">ज्ञान सेवा</a>
+    <a href="vriddhseva.html">वृद्ध सेवा</a>
+    <a href="chikitsa.html">चिकित्सा सेवा</a>
+    <a href="sampark.html">संपर्क सूत्र</a>
+    <a href="donate.html">Donate</a>
+  </nav>
+
 </header>
+
 
 <section class="card">
 
@@ -79,6 +98,15 @@
   </p>
 
 </section>
+
+<script src="../js/hover.js"></script>
+
+<script>
+  function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+  }
+</script>
+
 
 <footer>
   © 2026 Vasu Kaushal Foundation | Designed by <b>DINESH JAIN - 9887743333</b>
