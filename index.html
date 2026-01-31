@@ -3,32 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Vasu Kaushal Foundation</title>
 
-  <!-- Favicon -->
   <link rel="icon" href="favicon.ico">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
+  <!-- HEADER -->
   <header>
 
-    <!-- Logo -->
     <img src="assets/logo.jpg" class="logo" alt="Logo">
 
-    <!-- Title -->
     <h1>वसु कौशल फाउंडेशन</h1>
     <p>सेवा • धर्म • समर्पण</p>
 
-    <!-- Mobile Menu Button -->
     <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
 
-    <!-- Navigation -->
     <nav id="menu">
       <a href="pages/gauseva.html">गौ सेवा</a>
       <a href="pages/annseva.html">अन्न सेवा</a>
@@ -37,22 +29,21 @@
       <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
       <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
       <a href="pages/sampark.html">संपर्क सूत्र</a>
+      <a href="pages/ebrochure.html">E-Brochure</a>
       <a href="pages/donate.html">Donate</a>
     </nav>
 
   </header>
 
 
-  <!-- ================= MAIN CONTENT ================= -->
+  <!-- MAIN CARD -->
   <section class="card">
 
     <!-- Banner -->
     <img src="assets/homebanner.jpg" alt="Banner">
 
-    <!-- Quote -->
     <h2>"अहिंसा परमो धर्मः"</h2>
 
-    <!-- Text -->
     <p>
       यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
       प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
@@ -64,31 +55,59 @@
       सभी से विनम्र आग्रह है कि करुणाभाव रखते हुए पुण्य कार्यों में सहभागिता करें।
     </p>
 
+<hr>
+
+<!-- ✅ E-Brochure Download Section -->
+<h3 style="text-align:center; margin-top:25px;">
+  📄 हमारा ई-ब्रोशर डाउनलोड करें
+</h3>
+
+<p style="text-align:center;">
+  हमारी सेवाओं की पूरी जानकारी PDF ब्रोशर में उपलब्ध है।
+</p>
+
+<div style="text-align:center; margin-top:18px;">
+  <a href="assets/brochure.pdf" download
+     style="
+       background:#6a0000;
+       color:white;
+       padding:14px 30px;
+       border-radius:12px;
+       text-decoration:none;
+       font-size:18px;
+       font-weight:bold;
+       box-shadow:0 5px 12px rgba(0,0,0,0.25);
+       display:inline-block;
+       transition:0.3s;
+     "
+     onmouseover="this.style.transform='scale(1.05)'"
+     onmouseout="this.style.transform='scale(1)'"
+  >
+    📥 Download E-Brochure
+  </a>
+</div>
+
+
     <hr>
 
-    <!-- Video Section -->
+    <!-- Video -->
     <h3>हमारी सेवा झलक</h3>
 
     <video class="hoverVideo" controls muted>
   <source src="assets/video.mp4" type="video/mp4">
 </video>
 
-
   </section>
 
 
-  <!-- ================= FOOTER ================= -->
+  <!-- FOOTER -->
   <footer>
     © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
   </footer>
 
 
-  <!-- ================= JS ================= -->
-
-  <!-- Hover Video Script -->
   <script src="js/hover.js"></script>
 
-  <!-- Mobile Menu Toggle -->
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("show");
@@ -97,4 +116,3 @@
 
 </body>
 </html>
-
