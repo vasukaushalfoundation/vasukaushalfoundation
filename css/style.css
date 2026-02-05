@@ -268,3 +268,143 @@ footer {
     left: 100%;
   }
 }
+
+
+/* Announcement Wrapper */
+.announcement-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: #fff8e1;
+  border: 1px solid #f1c27d;
+  padding: 10px 0;
+  margin: 15px 0;
+}
+
+/* Moving Text */
+.announcement-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3e2723;
+  padding-left: 100%;
+  animation: scrollText 18s linear infinite;
+}
+
+/* Link Styling */
+.announcement-text a {
+  color: #b71c1c;
+  text-decoration: none;
+  margin-left: 6px;
+  animation: softBlink 1.5s infinite;
+}
+
+/* Scroll Animation */
+@keyframes scrollText {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Soft Blink (Professional) */
+@keyframes softBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Mobile Friendly */
+@media (max-width: 600px) {
+  .announcement-text {
+    font-size: 14px;
+  }
+}
+
+/* ================================
+   SERVICE PAGE VIDEO FIX
+================================ */
+
+/* Desktop par video size control */
+.service-video {
+  width: 100%;
+  max-width: 680px;   /* 👈 desktop limit */
+  height: auto;
+  display: block;
+  margin: 18px auto;
+  border-radius: 18px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+/* Large screens par aur compact */
+@media (min-width: 1200px) {
+  .service-video {
+    max-width: 600px;
+  }
+}
+
+/* ================================
+   SERVICE PAGE – VIDEO FINAL FIX
+================================ */
+
+/* ================================
+   SERVICE PAGE – EXTRA COMPACT VIDEO
+================================ */
+
+/* ================================
+   SERVICE PAGE – FULL VIEW VIDEO FIT
+================================ */
+
+.service-video {
+  width: auto;
+  max-width: 460px;          /* 👈 width control */
+  max-height: 70vh;          /* 👈 SCREEN HEIGHT ke andar */
+  height: auto;
+  display: block;
+  margin: 12px auto;
+  border-radius: 16px;
+  object-fit: contain;       /* 👈 poori video dikhe */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+/* Large desktop */
+@media (min-width: 1200px) {
+  .service-video {
+    max-height: 65vh;
+    max-width: 420px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .service-video {
+    max-width: 100%;
+    max-height: 60vh;
+  }
+}
+
+/* ================================
+   WHATSAPP BUTTON
+================================ */
+.whatsapp-btn {
+  display: inline-block;
+  background: #25D366;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+  transition: 0.3s;
+}
+
+.whatsapp-btn:hover {
+  background: #1ebe5d;
+  transform: scale(1.05);
+}
