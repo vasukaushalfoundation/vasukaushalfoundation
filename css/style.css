@@ -408,3 +408,34 @@ footer {
   background: #1ebe5d;
   transform: scale(1.05);
 }
+
+
+.announcement-wrap {
+  background: #6a0000;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.announcement-text {
+  display: inline-block;
+  padding: 12px 0;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  animation: marquee 15s linear infinite, blink 1.5s infinite;
+}
+
+.announcement-text a {
+  color: #ffd700;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes blink {
+  50% { opacity: 0.4; }
+}

@@ -7,127 +7,140 @@
 
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Announcement CSS -->
+  <style>
+    .announcement-wrap {
+      background: #6a0000;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .announcement-text {
+      display: inline-block;
+      padding: 12px 0;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      animation: marquee 14s linear infinite, blink 1.6s infinite;
+    }
+
+    .announcement-text a {
+      color: #ffd700;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-left: 6px;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.45; }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
+<!-- HEADER -->
+<header>
 
-    <img src="assets/logo.jpg" class="logo" alt="Logo">
+  <img src="assets/logo.jpg" class="logo" alt="Logo">
 
-    <h1>वसु कौशल फाउंडेशन</h1>
-    <p>सेवा • धर्म • समर्पण</p>
+  <h1>वसु कौशल फाउंडेशन</h1>
+  <p>सेवा • धर्म • समर्पण</p>
 
-    <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
 
-    <nav id="menu">
-      <a href="pages/gauseva.html">गौ सेवा</a>
-      <a href="pages/annseva.html">अन्न सेवा</a>
-      <a href="pages/prani.html">मूक प्राणी सेवा</a>
-      <a href="pages/gyanseva.html">ज्ञान सेवा</a>
-      <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
-      <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
-      <a href="pages/janganna.html">जनगणना</a>
-      <a href="pages/sampark.html">संपर्क सूत्र</a>
-      <a href="pages/donate.html">Donate</a>
-    </nav>
+  <nav id="menu">
+    <a href="pages/gauseva.html">गौ सेवा</a>
+    <a href="pages/annseva.html">अन्न सेवा</a>
+    <a href="pages/prani.html">मूक प्राणी सेवा</a>
+    <a href="pages/gyanseva.html">ज्ञान सेवा</a>
+    <a href="pages/vriddhseva.html">वृद्ध सेवा</a>
+    <a href="pages/chikitsa.html">चिकित्सा सेवा</a>
+    <a href="pages/janganna.html">जनगणना</a>
+    <a href="pages/sampark.html">संपर्क सूत्र</a>
+    <a href="pages/donate.html">Donate</a>
+  </nav>
 
-  </header>
+</header>
 
-<!-- Announcement -->
-  <div class="announcement-wrap">
-    <div class="announcement-text">
-      🧾 जैन जनगणना फॉर्म हेतु यहाँ क्लिक करें —
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfFOkKZgzyzTa0RTDig2OACcoh5xkC8FWzJN9LY1XFVBLrtfQ/viewform"
-         target="_blank">
-        जनगणना फॉर्म
-      </a>
-    </div>
+<!-- RUNNING + BLINKING ANNOUNCEMENT -->
+<div class="announcement-wrap">
+  <div class="announcement-text">
+    🧾 जैन जनगणना फॉर्म हेतु यहाँ क्लिक करें —
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfFOkKZgzyzTa0RTDig2OACcoh5xkC8FWzJN9LY1XFVBLrtfQ/viewform"
+       target="_blank">
+      जनगणना फॉर्म
+    </a>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<section class="card">
+
+  <!-- TEXT ABOVE BANNER -->
+  <h2>"अहिंसा परमो धर्मः"</h2>
+
+  <p>
+    यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
+    प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
+    प्रत्येक जीव की रक्षा करना प्रत्येक मानवता का कर्तव्य है।
+  </p>
+
+  <p>
+    फाउंडेशन का निर्माण सभी जीवों के कष्ट दूर करने हेतु किया गया है।
+    सभी से विनम्र आग्रह है कि करुणाभाव रखते हुए पुण्य कार्यों में सहभागिता करें।
+  </p>
+
+  <hr>
+
+  <!-- BANNER -->
+  <img src="assets/homebanner.jpg" alt="Banner">
+
+  <hr>
+
+  <!-- E-BROCHURE -->
+  <h3 style="text-align:center;">📄 हमारा ई-ब्रोशर</h3>
+
+  <p style="text-align:center;">
+    हमारी सेवाओं की पूरी जानकारी PDF में उपलब्ध है।
+  </p>
+
+  <div style="text-align:center; margin-top:20px;">
+    <a href="assets/brochure.pdf" download class="sparkle-btn">
+      📥 Download E-Brochure
+      <span class="sparkle"></span>
+    </a>
   </div>
 
-  <!-- MAIN CARD -->
-  <section class="card">
+  <hr>
 
-    <!-- Banner -->
-    <img src="assets/homebanner.jpg" alt="Banner">
+  <!-- VIDEO -->
+  <h3>हमारी सेवा झलक</h3>
 
-    <h2>"अहिंसा परमो धर्मः"</h2>
+  <video class="hoverVideo" autoplay muted loop playsinline>
+    <source src="assets/video.mp4" type="video/mp4">
+  </video>
 
-    <p>
-      यह युक्ति किसी जाति, धर्म, सम्प्रदाय विशेष के लिए नही बल्कि संसार के
-      प्रत्येक प्राणी के लिए उपयोगी है, क्योंकि दया ही धर्म का मूल है।
-      प्रत्येक जीव की रक्षा करना प्रत्येक मानवता का कर्तव्य है।
-    </p>
+</section>
 
-    <p>
-      फाउंडेशन का निर्माण सभी जीवों के कष्ट दूर करने हेतु किया गया है।
-      सभी से विनम्र आग्रह है कि करुणाभाव रखते हुए पुण्य कार्यों में सहभागिता करें।
-    </p>
+<!-- FOOTER -->
+<footer>
+  © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
+</footer>
 
-<hr>
+<script src="js/hover.js"></script>
 
-<h3 style="text-align:center;">📄 हमारा ई-ब्रोशर</h3>
-
-<p style="text-align:center;">
-  हमारी सेवाओं की पूरी जानकारी PDF में उपलब्ध है।
-</p>
-
-<!-- Download Button -->
-<div style="text-align:center; margin-top:20px;">
-  <a href="assets/brochure.pdf" download class="sparkle-btn">
-    📥 Download E-Brochure
-    <span class="sparkle"></span>
-  </a>
-</div>
-
-<br><br>
-
-<hr>
-
-<h3 style="text-align:center;">🧾 जैन जनगणना</h3>
-
-<p style="text-align:center;">
-  जैन समाज की सटीक एवं सुव्यवस्थित जानकारी हेतु  
-  जनगणना फॉर्म भरने का विनम्र निवेदन।
-</p>
-
-<div style="text-align:center; margin-top:15px;">
-  <a href="pages/janganna.html" class="sparkle-btn">
-    📋 जनगणना पेज खोलें
-    <span class="sparkle"></span>
-  </a>
-</div>
-
-    <hr>
-
-    <!-- Video -->
-    <h3>हमारी सेवा झलक</h3>
-
-    <video class="hoverVideo" autoplay muted loop playsinline>
-  <source src="assets/video.mp4" type="video/mp4">
-</video>
-
-
-  </section>
-
-
-  <!-- FOOTER -->
-  <footer>
-    © 2026 Vasu Kaushal Foundation | सेवा ही धर्म है
-  </footer>
-
-
-  <script src="js/hover.js"></script>
-
-  <script>
-    function toggleMenu() {
-      document.getElementById("menu").classList.toggle("show");
-    }
-  </script>
+<script>
+  function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+  }
+</script>
 
 </body>
 </html>
-
-
-
