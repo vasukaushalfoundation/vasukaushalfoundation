@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="hi">
+<!DOCTYPE html>
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="google-site-verification" content="1FrKnSxprXnJvRoygadM_bQK0KFT2yayDoWpoyHoNsA" />
@@ -15,7 +17,6 @@
       overflow: hidden;
       white-space: nowrap;
     }
-
     .announcement-text {
       display: inline-block;
       padding: 12px 0;
@@ -24,24 +25,32 @@
       font-weight: 600;
       animation: marquee 14s linear infinite, blink 1.6s infinite;
     }
-
     .announcement-text a {
       color: #ffd700;
       font-weight: bold;
       text-decoration: underline;
       margin-left: 6px;
     }
-
     @keyframes marquee {
       0% { transform: translateX(100%); }
       100% { transform: translateX(-100%); }
     }
-
     @keyframes blink {
       50% { opacity: 0.45; }
     }
   </style>
+
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z6FH8XRL06"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Z6FH8XRL06');
+  </script>
+
 </head>
+
 
 <body>
 
@@ -144,4 +153,5 @@
 
 </body>
 </html>
+
 
