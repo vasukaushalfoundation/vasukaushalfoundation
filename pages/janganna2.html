@@ -373,27 +373,30 @@ source: document.getElementById("sourceSelect").value,
 representative: document.getElementById("representativeName").value
 };
 
-fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec",{
-method:"POST",
-body: JSON.stringify(formData),
-headers: {
-"Content-Type":"application/json"
-}
-})
-.then(res=>res.text())
-.then(response=>{
+// Hidden form create
+let form = document.createElement("form");
+form.method = "POST";
+form.action = "https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec";
+form.target = "hidden_iframe";
+
+let input = document.createElement("input");
+input.type = "hidden";
+input.name = "data";
+input.value = JSON.stringify(formData);
+
+form.appendChild(input);
+document.body.appendChild(form);
+
+form.submit();
+
 alert("प्रपत्र सफलतापूर्वक जमा हो गया ✅");
+
 document.getElementById("familyForm").reset();
 document.getElementById("members").innerHTML="";
 addMember();
-})
-.catch(err=>{
-alert("डेटा भेजने में त्रुटि हुई ❌");
-});
 
 });
 
 </script>
 
-
-
+<iframe name="hidden_iframe" style="display:none;"></iframe>
