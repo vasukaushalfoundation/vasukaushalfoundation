@@ -7,32 +7,29 @@
 
 <style>
 body{
-font-family: Arial, sans-serif;
-background:#f4f6f9;
+font-family: Arial;
 margin:0;
-padding:0;
+background:#f4f6f9;
+}
+
+.header{
+background:linear-gradient(45deg,#800000,#b30000);
+color:white;
+padding:25px;
+text-align:center;
+}
+
+.header h1{
+margin:0;
 }
 
 .container{
 max-width:1000px;
 margin:30px auto;
-background:#ffffff;
+background:white;
 padding:30px;
-border-radius:12px;
-box-shadow:0 4px 15px rgba(0,0,0,0.1);
-}
-
-h1{
-text-align:center;
-color:#800000;
-margin-bottom:5px;
-}
-
-.subtitle{
-text-align:center;
-font-size:14px;
-margin-bottom:20px;
-line-height:1.6;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
 .section-title{
@@ -44,9 +41,9 @@ padding-bottom:5px;
 }
 
 label{
-font-weight:600;
-display:block;
+font-weight:bold;
 margin-top:10px;
+display:block;
 }
 
 input, select, textarea{
@@ -86,45 +83,47 @@ font-size:12px;
 }
 
 .footer{
+background:#222;
+color:white;
+text-align:center;
+padding:25px;
 margin-top:40px;
-padding-top:20px;
-border-top:2px solid #ddd;
-font-size:14px;
 }
 
-a{
-color:#800000;
+.footer a{
+color:#ffd700;
 text-decoration:none;
-font-weight:600;
+font-weight:bold;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
 
+<div class="header">
 <h1>जैन जनगणना प्रपत्र 2026</h1>
-
-<div class="subtitle">
-परम पूज्य अभीक्ष्ण ज्ञानोपयोगी आचार्य श्री 108 वसुनंदी जी महाराज के पावन आशीर्वाद से
-वसु कौशल फाउंडेशन समिति के तत्वावधान में जैन बंधुओं की सटीक, सुव्यवस्थित एवं प्रमाणिक जनगणना
-के उद्देश्य से यह जैन जनगणना प्रपत्र तैयार किया गया है। इस जनगणना के माध्यम से समाज की वास्तविक
-संख्या, संरचना एवं आवश्यकताओं की सही जानकारी प्राप्त की जाएगी, जिससे भविष्य में समाजहित के कार्यों
-की बेहतर योजना बनाई जा सके। कृपया परिवार के सभी सदस्यों की जानकारी फॉर्म में भरें।
+<p>
+परम पूज्य आचार्य श्री 108 वसुनंदी जी महाराज के पावन आशीर्वाद से<br>
+वसु कौशल फाउंडेशन समिति के तत्वावधान में आयोजित
+</p>
 </div>
+
+<div class="container">
 
 <form id="familyForm">
 
 <div class="section-title">परिवार विवरण</div>
 
 <label>संप्रदाय</label>
-<select id="sampraday">
+<select id="sampraday" required>
+<option value="">-- चयन करें --</option>
 <option>दिगम्बर</option>
 <option>श्वेताम्बर</option>
 </select>
 
 <label>सरनेम में जैन लिखते हैं?</label>
-<select id="jainSurname">
+<select id="jainSurname" required>
+<option value="">-- चयन करें --</option>
 <option>हाँ</option>
 <option>नहीं</option>
 </select>
@@ -147,24 +146,23 @@ font-weight:600;
 <label>ईमेल</label>
 <input type="email" id="email">
 
-<div class="section-title">परिवार सदस्य विवरण</div>
+<div class="section-title">परिवार सदस्य</div>
 
 <div id="members"></div>
 <button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
 
 <div class="section-title">सदस्यता एवं दान</div>
 
-<label>सदस्यता</label>
-<div style="font-size:13px;">क्या आप संस्था के सदस्य बनना चाहेंगे?</div>
-<select id="membership">
+<label>क्या आप संस्था के सदस्य बनना चाहेंगे?</label>
+<select id="membership" required>
+<option value="">-- चयन करें --</option>
 <option>हाँ</option>
 <option>नहीं</option>
 </select>
 
-<label style="margin-top:20px;">दान सहयोग</label>
-<div style="font-size:13px;">
+<label style="margin-top:20px;">
 क्या आप अपनी चंचल लक्ष्मी को समाज सेवा एवं जिनशासन की उन्नति के पावन कार्यों में समर्पित करना चाहेंगे?
-</div>
+</label>
 
 <select id="donationSelect" onchange="toggleDonationAmount()">
 <option value="">-- चयन करें --</option>
@@ -177,35 +175,41 @@ font-weight:600;
 <input id="donationAmount">
 </div>
 
+<label style="margin-top:20px;">
+यह फॉर्म आपको किस माध्यम से प्राप्त हुआ है?
+</label>
+
+<select id="sourceSelect" onchange="toggleRepresentative()">
+<option value="">-- चयन करें --</option>
+<option>मंदिर जी</option>
+<option>पंचकल्याणक</option>
+<option>अन्य धार्मिक कार्यक्रम</option>
+<option value="संस्था प्रतिनिधि">संस्था प्रतिनिधि</option>
+<option>SMS/WhatsApp</option>
+<option>अन्य</option>
+</select>
+
+<div id="repNameBox" style="display:none;">
+<label>संस्था प्रतिनिधि का नाम</label>
+<input id="representativeName">
+</div>
+
 <button type="submit">प्रपत्र जमा करें</button>
 
 </form>
 
-<div class="footer">
-<b>किसी भी प्रकार की सहायता हेतु संपर्क करें</b><br><br>
-यदि आपको प्रपत्र भरने, जानकारी देने या किसी अन्य सहायता की आवश्यकता हो, तो कृपया संपर्क करें-<br><br>
-
-मोबाइल: 
-<a href="tel:8094807020">8094807020</a> (Call) ,
-<a href="https://wa.me/919376481008" target="_blank">9376481008</a> (WhatsApp)
-<br><br>
-
-वेबसाईट: 
-<a href="https://www.vasukaushalfoundation.in" target="_blank">
-www.vasukaushalfoundation.in
-</a>
-<br><br>
-
-Instagram:
-<a href="https://www.instagram.com/vasu_kaushal_foundation/" target="_blank">
-www.instagram.com/vasu_kaushal_foundation/
-</a>
-<br><br>
-
-मुख्य कार्यालय:
-वसु कौशल फाउंडेशन, बूथ न. 57, सेक्टर-16, फरीदाबाद, हरियाणा 121002
 </div>
 
+<div class="footer">
+<b>किसी भी प्रकार की सहायता हेतु संपर्क करें</b><br><br>
+
+<a href="tel:8094807020">📞 8094807020</a> |
+<a href="https://wa.me/919376481008" target="_blank">💬 9376481008 (WhatsApp)</a><br><br>
+
+<a href="https://www.vasukaushalfoundation.in" target="_blank">🌐 Website</a> |
+<a href="https://www.instagram.com/vasu_kaushal_foundation/" target="_blank">📷 Instagram</a><br><br>
+
+वसु कौशल फाउंडेशन, सेक्टर-16, फरीदाबाद
 </div>
 
 <script>
@@ -227,41 +231,20 @@ div.innerHTML=`
 
 <label>लिंग</label>
 <select class="m_gender">
+<option value="">-- चयन करें --</option>
 <option>पुरुष</option>
 <option>महिला</option>
 <option>अन्य</option>
 </select>
 
-<label>जन्मतिथि</label>
-<input type="date" class="m_dob">
-
 <label>वैवाहिक स्थिति</label>
 <select class="m_marital">
+<option value="">-- चयन करें --</option>
 <option>अविवाहित</option>
 <option>विवाहित</option>
 <option>विधुर / विधवा</option>
 <option>तलाकशुदा</option>
 </select>
-
-<label>व्यवसाय</label>
-<select class="m_occupation" onchange="toggleOtherOccupation(this)">
-<option>व्यापार</option>
-<option>नौकरी</option>
-<option>विद्यार्थी</option>
-<option>गृहिणी</option>
-<option value="अन्य">अन्य</option>
-</select>
-
-<div class="otherOcc" style="display:none;">
-<label>अन्य व्यवसाय</label>
-<input class="m_otherOccupation">
-</div>
-
-<label>शिक्षा</label>
-<input class="m_education">
-
-<label>मोबाइल</label>
-<input class="m_mobile">
 `;
 document.getElementById("members").appendChild(div);
 }
@@ -274,74 +257,40 @@ b.querySelector("b").innerText="सदस्य "+memberCount;
 });
 }
 
-function toggleOtherOccupation(sel){
-let box=sel.parentElement.querySelector(".otherOcc");
-box.style.display=(sel.value==="अन्य")?"block":"none";
-}
-
 function toggleDonationAmount(){
-let val=document.getElementById("donationSelect").value;
-document.getElementById("donationAmountBox").style.display=(val==="हाँ")?"block":"none";
+document.getElementById("donationAmountBox").style.display=
+document.getElementById("donationSelect").value==="हाँ"?"block":"none";
 }
 
-document.getElementById("pincode").addEventListener("blur",function(){
-let pin=this.value;
-if(pin.length==6){
-fetch("https://api.postalpincode.in/pincode/"+pin)
-.then(res=>res.json())
-.then(data=>{
-if(data[0].Status=="Success"){
-document.getElementById("district").value=data[0].PostOffice[0].District;
-document.getElementById("state").value=data[0].PostOffice[0].State;
+function toggleRepresentative(){
+document.getElementById("repNameBox").style.display=
+document.getElementById("sourceSelect").value==="संस्था प्रतिनिधि"?"block":"none";
 }
-});
-}
-});
 
 window.onload=addMember;
 
 document.getElementById("familyForm").addEventListener("submit",function(e){
 e.preventDefault();
 
-let membersArray=[];
-document.querySelectorAll(".member-block").forEach(block=>{
-membersArray.push({
-name:block.querySelector(".m_name").value,
-father:block.querySelector(".m_father").value,
-gender:block.querySelector(".m_gender").value,
-dob:block.querySelector(".m_dob").value,
-marital:block.querySelector(".m_marital").value,
-occupation:block.querySelector(".m_occupation").value,
-otherOccupation:block.querySelector(".m_otherOccupation")?block.querySelector(".m_otherOccupation").value:"",
-education:block.querySelector(".m_education").value,
-mobile:block.querySelector(".m_mobile").value
-});
-});
-
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec",{
 method:"POST",
 body:JSON.stringify({
-sampraday:document.getElementById("sampraday").value,
-jainSurname:document.getElementById("jainSurname").value,
-gotra:document.getElementById("gotra").value,
-address:document.getElementById("address").value,
-district:document.getElementById("district").value,
-state:document.getElementById("state").value,
-email:document.getElementById("email").value,
-membership:document.getElementById("membership").value,
-donation:document.getElementById("donationAmount").value,
-source:"Online Website",
-representative:"Vasu Kaushal Foundation",
-members:membersArray
+sampraday:sampraday.value,
+jainSurname:jainSurname.value,
+membership:membership.value,
+donation:donationAmount.value,
+source:sourceSelect.value,
+representative:representativeName.value,
+members:[]
 })
 });
 
-const {jsPDF}=window.jspdf;
-let doc=new jsPDF();
-doc.text("जैन जनगणना 2026",10,10);
-doc.save("Jain_Janganna_2026.pdf");
-
 alert("जय जिनेन्द्र 🙏\nफॉर्म सफलतापूर्वक जमा हुआ");
+
+document.getElementById("familyForm").reset();
+document.getElementById("members").innerHTML="";
+memberCount=0;
+addMember();
 });
 </script>
 
