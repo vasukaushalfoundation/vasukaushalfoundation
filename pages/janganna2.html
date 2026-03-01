@@ -3,57 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <title>जैन जनगणना प्रपत्र 2026</title>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body { font-family: Arial; background:#f5f1e6; padding:20px;}
-.container { max-width:950px; margin:auto; background:white; padding:25px; border-radius:10px;}
-h1 { text-align:center; color:#8B0000; }
-
-input, select, textarea {
-  width:100%;
-  padding:8px;
-  margin:6px 0;
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f9;
+margin:0;
+padding:0;
 }
 
-button {
-  background:#8B0000;
-  color:white;
-  padding:10px;
-  border:none;
-  cursor:pointer;
-  margin-top:8px;
+.container{
+max-width:1000px;
+margin:30px auto;
+background:#ffffff;
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
 }
 
-.member-block {
-  border:1px solid #ccc;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:6px;
-  background:#fafafa;
-  position:relative;
+h1{
+text-align:center;
+color:#800000;
+margin-bottom:5px;
 }
 
-.remove-btn {
-  background:red;
-  position:absolute;
-  right:10px;
-  top:10px;
-  padding:5px 8px;
-  font-size:12px;
+.subtitle{
+text-align:center;
+font-size:14px;
+margin-bottom:20px;
+line-height:1.6;
 }
 
-.member-title {
-  font-weight:bold;
-  margin-bottom:10px;
+.section-title{
+margin-top:25px;
+font-weight:bold;
+color:#800000;
+border-bottom:2px solid #800000;
+padding-bottom:5px;
 }
 
-.note-box {
-  background:#fff3cd;
-  padding:10px;
-  border-radius:6px;
-  margin-bottom:10px;
+label{
+font-weight:600;
+display:block;
+margin-top:10px;
+}
+
+input, select, textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+background:#800000;
+color:white;
+padding:10px 15px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:15px;
+}
+
+.member-block{
+border:1px solid #ddd;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+background:#fafafa;
+position:relative;
+}
+
+.remove-btn{
+background:red;
+position:absolute;
+right:10px;
+top:10px;
+padding:5px 8px;
+font-size:12px;
+}
+
+.footer{
+margin-top:40px;
+padding-top:20px;
+border-top:2px solid #ddd;
+font-size:14px;
+}
+
+a{
+color:#800000;
+text-decoration:none;
+font-weight:600;
 }
 </style>
 </head>
@@ -63,201 +105,244 @@ button {
 
 <h1>जैन जनगणना प्रपत्र 2026</h1>
 
+<div class="subtitle">
+परम पूज्य अभीक्ष्ण ज्ञानोपयोगी आचार्य श्री 108 वसुनंदी जी महाराज के पावन आशीर्वाद से
+वसु कौशल फाउंडेशन समिति के तत्वावधान में जैन बंधुओं की सटीक, सुव्यवस्थित एवं प्रमाणिक जनगणना
+के उद्देश्य से यह जैन जनगणना प्रपत्र तैयार किया गया है। इस जनगणना के माध्यम से समाज की वास्तविक
+संख्या, संरचना एवं आवश्यकताओं की सही जानकारी प्राप्त की जाएगी, जिससे भविष्य में समाजहित के कार्यों
+की बेहतर योजना बनाई जा सके। कृपया परिवार के सभी सदस्यों की जानकारी फॉर्म में भरें।
+</div>
+
 <form id="familyForm">
 
+<div class="section-title">परिवार विवरण</div>
+
 <label>संप्रदाय</label>
-<select id="sampraday" required>
-<option value="">-- चयन करें --</option>
+<select id="sampraday">
 <option>दिगम्बर</option>
 <option>श्वेताम्बर</option>
 </select>
 
 <label>सरनेम में जैन लिखते हैं?</label>
 <select id="jainSurname">
-<option value="">-- चयन करें --</option>
 <option>हाँ</option>
 <option>नहीं</option>
 </select>
 
 <label>गोत्र</label>
-<input type="text" id="gotra">
+<input id="gotra">
 
 <label>पता</label>
 <textarea id="address"></textarea>
 
+<label>पिन कोड</label>
+<input id="pincode">
+
 <label>जिला</label>
-<input type="text" id="district">
+<input id="district">
 
 <label>राज्य</label>
-<input type="text" id="state">
+<input id="state">
 
 <label>ईमेल</label>
 <input type="email" id="email">
 
+<div class="section-title">परिवार सदस्य विवरण</div>
+
+<div id="members"></div>
+<button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
+
+<div class="section-title">सदस्यता एवं दान</div>
+
 <label>सदस्यता</label>
+<div style="font-size:13px;">क्या आप संस्था के सदस्य बनना चाहेंगे?</div>
 <select id="membership">
-<option value="">-- चयन करें --</option>
 <option>हाँ</option>
 <option>नहीं</option>
 </select>
 
-<label>दान सहयोग</label>
-<select id="donationSelect">
-<option value="">-- चयन करें --</option>
-<option>हाँ</option>
-<option>अभी नहीं</option>
-</select>
-
-<h3>परिवार सदस्य विवरण</h3>
-
-<div class="note-box">
-📌 परिवार के अन्य सदस्यों को जोड़ने के लिए “+ सदस्य जोड़ें” पर क्लिक करें।
+<label style="margin-top:20px;">दान सहयोग</label>
+<div style="font-size:13px;">
+क्या आप अपनी चंचल लक्ष्मी को समाज सेवा एवं जिनशासन की उन्नति के पावन कार्यों में समर्पित करना चाहेंगे?
 </div>
 
-<div id="members"></div>
+<select id="donationSelect" onchange="toggleDonationAmount()">
+<option value="">-- चयन करें --</option>
+<option value="हाँ">हाँ</option>
+<option value="अभी नहीं">अभी नही</option>
+</select>
 
-<button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
+<div id="donationAmountBox" style="display:none;">
+<label>रुपये प्रतिमाह</label>
+<input id="donationAmount">
+</div>
 
 <button type="submit">प्रपत्र जमा करें</button>
 
 </form>
 
+<div class="footer">
+<b>किसी भी प्रकार की सहायता हेतु संपर्क करें</b><br><br>
+यदि आपको प्रपत्र भरने, जानकारी देने या किसी अन्य सहायता की आवश्यकता हो, तो कृपया संपर्क करें-<br><br>
+
+मोबाइल: 
+<a href="tel:8094807020">8094807020</a> (Call) ,
+<a href="https://wa.me/919376481008" target="_blank">9376481008</a> (WhatsApp)
+<br><br>
+
+वेबसाईट: 
+<a href="https://www.vasukaushalfoundation.in" target="_blank">
+www.vasukaushalfoundation.in
+</a>
+<br><br>
+
+Instagram:
+<a href="https://www.instagram.com/vasu_kaushal_foundation/" target="_blank">
+www.instagram.com/vasu_kaushal_foundation/
+</a>
+<br><br>
+
+मुख्य कार्यालय:
+वसु कौशल फाउंडेशन, बूथ न. 57, सेक्टर-16, फरीदाबाद, हरियाणा 121002
+</div>
+
 </div>
 
 <script>
-
-let memberCount = 0;
+let memberCount=0;
 
 function addMember(){
+memberCount++;
+let div=document.createElement("div");
+div.className="member-block";
+div.innerHTML=`
+<b>सदस्य ${memberCount}</b>
+<button type="button" class="remove-btn" onclick="this.parentElement.remove();updateNumbering()">X</button>
 
-  memberCount++;
+<label>नाम</label>
+<input class="m_name" required>
 
-  var container = document.getElementById("members");
+<label>पिता/पति</label>
+<input class="m_father">
 
-  var div = document.createElement("div");
-  div.className = "member-block";
+<label>लिंग</label>
+<select class="m_gender">
+<option>पुरुष</option>
+<option>महिला</option>
+<option>अन्य</option>
+</select>
 
-  div.innerHTML = `
-    <div class="member-title">सदस्य ${memberCount}</div>
-    <button type="button" class="remove-btn" onclick="removeMember(this)">X</button>
+<label>जन्मतिथि</label>
+<input type="date" class="m_dob">
 
-    <label>नाम</label>
-    <input class="m_name" required>
+<label>वैवाहिक स्थिति</label>
+<select class="m_marital">
+<option>अविवाहित</option>
+<option>विवाहित</option>
+<option>विधुर / विधवा</option>
+<option>तलाकशुदा</option>
+</select>
 
-    <label>पिता/पति</label>
-    <input class="m_father">
+<label>व्यवसाय</label>
+<select class="m_occupation" onchange="toggleOtherOccupation(this)">
+<option>व्यापार</option>
+<option>नौकरी</option>
+<option>विद्यार्थी</option>
+<option>गृहिणी</option>
+<option value="अन्य">अन्य</option>
+</select>
 
-    <label>लिंग</label>
-    <select class="m_gender">
-      <option value="">-- चयन करें --</option>
-      <option>पुरुष</option>
-      <option>महिला</option>
-      <option>अन्य</option>
-    </select>
+<div class="otherOcc" style="display:none;">
+<label>अन्य व्यवसाय</label>
+<input class="m_otherOccupation">
+</div>
 
-    <label>जन्मतिथि</label>
-    <input type="date" class="m_dob">
+<label>शिक्षा</label>
+<input class="m_education">
 
-    <label>वैवाहिक स्थिति</label>
-    <select class="m_marital">
-      <option value="">-- चयन करें --</option>
-      <option>अविवाहित</option>
-      <option>विवाहित</option>
-      <option>विधुर / विधवा</option>
-      <option>तलाकशुदा</option>
-    </select>
-
-    <label>व्यवसाय</label>
-    <input class="m_occupation">
-
-    <label>अन्य व्यवसाय</label>
-    <input class="m_otherOccupation">
-
-    <label>शिक्षा</label>
-    <input class="m_education">
-
-    <label>मोबाइल</label>
-    <input class="m_mobile" required>
-  `;
-
-  container.appendChild(div);
-}
-
-function removeMember(btn){
-  btn.parentElement.remove();
-  updateNumbering();
+<label>मोबाइल</label>
+<input class="m_mobile">
+`;
+document.getElementById("members").appendChild(div);
 }
 
 function updateNumbering(){
-  memberCount = 0;
-  document.querySelectorAll(".member-block").forEach(function(block){
-    memberCount++;
-    block.querySelector(".member-title").innerText = "सदस्य " + memberCount;
-  });
+memberCount=0;
+document.querySelectorAll(".member-block").forEach(b=>{
+memberCount++;
+b.querySelector("b").innerText="सदस्य "+memberCount;
+});
 }
 
-window.onload = function(){
-  addMember();
-};
+function toggleOtherOccupation(sel){
+let box=sel.parentElement.querySelector(".otherOcc");
+box.style.display=(sel.value==="अन्य")?"block":"none";
+}
 
-document.getElementById("familyForm").addEventListener("submit", function(e){
+function toggleDonationAmount(){
+let val=document.getElementById("donationSelect").value;
+document.getElementById("donationAmountBox").style.display=(val==="हाँ")?"block":"none";
+}
 
-  e.preventDefault();
-
-  let membersArray = [];
-
-  document.querySelectorAll(".member-block").forEach(function(block){
-
-    membersArray.push({
-      name: block.querySelector(".m_name").value,
-      father: block.querySelector(".m_father").value,
-      gender: block.querySelector(".m_gender").value,
-      dob: block.querySelector(".m_dob").value,
-      marital: block.querySelector(".m_marital").value,
-      occupation: block.querySelector(".m_occupation").value,
-      otherOccupation: block.querySelector(".m_otherOccupation").value,
-      education: block.querySelector(".m_education").value,
-      mobile: block.querySelector(".m_mobile").value
-    });
-
-  });
-
-  fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      sampraday: document.getElementById("sampraday").value,
-      jainSurname: document.getElementById("jainSurname").value,
-      gotra: document.getElementById("gotra").value,
-      address: document.getElementById("address").value,
-      district: document.getElementById("district").value,
-      state: document.getElementById("state").value,
-      email: document.getElementById("email").value,
-      membership: document.getElementById("membership").value,
-      donation: document.getElementById("donationSelect").value,
-      source: "Online Website",
-      representative: "Vasu Kaushal Foundation",
-      members: membersArray
-    })
-  });
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  let y = 10;
-  doc.text("जैन जनगणना प्रपत्र 2026", 10, y);
-  y += 10;
-
-  membersArray.forEach(function(member, index){
-    doc.text("सदस्य " + (index+1) + " - " + member.name, 10, y);
-    y += 8;
-  });
-
-  doc.save("Jain_Janganna_2026.pdf");
-
-  alert("जय जिनेन्द्र 🙏\nफॉर्म सफलतापूर्वक जमा हुआ।");
-
+document.getElementById("pincode").addEventListener("blur",function(){
+let pin=this.value;
+if(pin.length==6){
+fetch("https://api.postalpincode.in/pincode/"+pin)
+.then(res=>res.json())
+.then(data=>{
+if(data[0].Status=="Success"){
+document.getElementById("district").value=data[0].PostOffice[0].District;
+document.getElementById("state").value=data[0].PostOffice[0].State;
+}
+});
+}
 });
 
+window.onload=addMember;
+
+document.getElementById("familyForm").addEventListener("submit",function(e){
+e.preventDefault();
+
+let membersArray=[];
+document.querySelectorAll(".member-block").forEach(block=>{
+membersArray.push({
+name:block.querySelector(".m_name").value,
+father:block.querySelector(".m_father").value,
+gender:block.querySelector(".m_gender").value,
+dob:block.querySelector(".m_dob").value,
+marital:block.querySelector(".m_marital").value,
+occupation:block.querySelector(".m_occupation").value,
+otherOccupation:block.querySelector(".m_otherOccupation")?block.querySelector(".m_otherOccupation").value:"",
+education:block.querySelector(".m_education").value,
+mobile:block.querySelector(".m_mobile").value
+});
+});
+
+fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec",{
+method:"POST",
+body:JSON.stringify({
+sampraday:document.getElementById("sampraday").value,
+jainSurname:document.getElementById("jainSurname").value,
+gotra:document.getElementById("gotra").value,
+address:document.getElementById("address").value,
+district:document.getElementById("district").value,
+state:document.getElementById("state").value,
+email:document.getElementById("email").value,
+membership:document.getElementById("membership").value,
+donation:document.getElementById("donationAmount").value,
+source:"Online Website",
+representative:"Vasu Kaushal Foundation",
+members:membersArray
+})
+});
+
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
+doc.text("जैन जनगणना 2026",10,10);
+doc.save("Jain_Janganna_2026.pdf");
+
+alert("जय जिनेन्द्र 🙏\nफॉर्म सफलतापूर्वक जमा हुआ");
+});
 </script>
 
 </body>
