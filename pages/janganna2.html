@@ -8,10 +8,14 @@
 
 <style>
 body { font-family: Arial; background:#f5f1e6; padding:20px;}
-.container { max-width:900px; margin:auto; background:white; padding:25px; border-radius:10px;}
+.container { max-width:950px; margin:auto; background:white; padding:25px; border-radius:10px;}
 h1 { text-align:center; color:#8B0000; }
 
-input, select { width:100%; padding:8px; margin:6px 0; }
+input, select, textarea {
+  width:100%;
+  padding:8px;
+  margin:6px 0;
+}
 
 button {
   background:#8B0000;
@@ -39,8 +43,16 @@ button {
   padding:5px 8px;
   font-size:12px;
 }
+
 .member-title {
   font-weight:bold;
+  margin-bottom:10px;
+}
+
+.note-box {
+  background:#fff3cd;
+  padding:10px;
+  border-radius:6px;
   margin-bottom:10px;
 }
 </style>
@@ -53,17 +65,54 @@ button {
 
 <form id="familyForm">
 
-<label>सम्प्रदाय</label>
+<label>संप्रदाय</label>
 <select id="sampraday" required>
 <option value="">-- चयन करें --</option>
 <option>दिगम्बर</option>
 <option>श्वेताम्बर</option>
 </select>
 
+<label>सरनेम में जैन लिखते हैं?</label>
+<select id="jainSurname">
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
 <label>गोत्र</label>
 <input type="text" id="gotra">
 
+<label>पता</label>
+<textarea id="address"></textarea>
+
+<label>जिला</label>
+<input type="text" id="district">
+
+<label>राज्य</label>
+<input type="text" id="state">
+
+<label>ईमेल</label>
+<input type="email" id="email">
+
+<label>सदस्यता</label>
+<select id="membership">
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
+<label>दान सहयोग</label>
+<select id="donationSelect">
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>अभी नहीं</option>
+</select>
+
 <h3>परिवार सदस्य विवरण</h3>
+
+<div class="note-box">
+📌 परिवार के अन्य सदस्यों को जोड़ने के लिए “+ सदस्य जोड़ें” पर क्लिक करें।
+</div>
 
 <div id="members"></div>
 
@@ -95,7 +144,7 @@ function addMember(){
     <label>नाम</label>
     <input class="m_name" required>
 
-    <label>पिता/पति का नाम</label>
+    <label>पिता/पति</label>
     <input class="m_father">
 
     <label>लिंग</label>
@@ -106,7 +155,28 @@ function addMember(){
       <option>अन्य</option>
     </select>
 
-    <label>मोबाइल नंबर</label>
+    <label>जन्मतिथि</label>
+    <input type="date" class="m_dob">
+
+    <label>वैवाहिक स्थिति</label>
+    <select class="m_marital">
+      <option value="">-- चयन करें --</option>
+      <option>अविवाहित</option>
+      <option>विवाहित</option>
+      <option>विधुर / विधवा</option>
+      <option>तलाकशुदा</option>
+    </select>
+
+    <label>व्यवसाय</label>
+    <input class="m_occupation">
+
+    <label>अन्य व्यवसाय</label>
+    <input class="m_otherOccupation">
+
+    <label>शिक्षा</label>
+    <input class="m_education">
+
+    <label>मोबाइल</label>
     <input class="m_mobile" required>
   `;
 
@@ -134,28 +204,42 @@ document.getElementById("familyForm").addEventListener("submit", function(e){
 
   e.preventDefault();
 
-  let allData = [];
+  let membersArray = [];
 
   document.querySelectorAll(".member-block").forEach(function(block){
 
-    allData.push({
-      sampraday: document.getElementById("sampraday").value,
-      gotra: document.getElementById("gotra").value,
+    membersArray.push({
       name: block.querySelector(".m_name").value,
       father: block.querySelector(".m_father").value,
       gender: block.querySelector(".m_gender").value,
+      dob: block.querySelector(".m_dob").value,
+      marital: block.querySelector(".m_marital").value,
+      occupation: block.querySelector(".m_occupation").value,
+      otherOccupation: block.querySelector(".m_otherOccupation").value,
+      education: block.querySelector(".m_education").value,
       mobile: block.querySelector(".m_mobile").value
     });
 
   });
 
-  // 📊 GOOGLE SHEET SUBMISSION
-  fetch("YOUR_GOOGLE_SCRIPT_URL", {
-    method:"POST",
-    body: JSON.stringify(allData)
+  fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      sampraday: document.getElementById("sampraday").value,
+      jainSurname: document.getElementById("jainSurname").value,
+      gotra: document.getElementById("gotra").value,
+      address: document.getElementById("address").value,
+      district: document.getElementById("district").value,
+      state: document.getElementById("state").value,
+      email: document.getElementById("email").value,
+      membership: document.getElementById("membership").value,
+      donation: document.getElementById("donationSelect").value,
+      source: "Online Website",
+      representative: "Vasu Kaushal Foundation",
+      members: membersArray
+    })
   });
 
-  // 📄 AUTO PDF EXPORT
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -163,13 +247,12 @@ document.getElementById("familyForm").addEventListener("submit", function(e){
   doc.text("जैन जनगणना प्रपत्र 2026", 10, y);
   y += 10;
 
-  allData.forEach(function(member, index){
-    doc.text("सदस्य " + (index+1), 10, y); y+=8;
-    doc.text("नाम: " + member.name, 10, y); y+=8;
-    doc.text("मोबाइल: " + member.mobile, 10, y); y+=12;
+  membersArray.forEach(function(member, index){
+    doc.text("सदस्य " + (index+1) + " - " + member.name, 10, y);
+    y += 8;
   });
 
-  doc.save("Jain_Janganna_Form.pdf");
+  doc.save("Jain_Janganna_2026.pdf");
 
   alert("जय जिनेन्द्र 🙏\nफॉर्म सफलतापूर्वक जमा हुआ।");
 
