@@ -334,4 +334,64 @@ function fetchLocation() {
 }
 </script>
 
+<script>
+
+document.getElementById("familyForm").addEventListener("submit", function(e){
+e.preventDefault();
+
+let members = [];
+
+document.querySelectorAll(".member-block").forEach(block=>{
+let inputs = block.querySelectorAll("input, select");
+
+members.push({
+name: inputs[0].value,
+father: inputs[1].value,
+gender: inputs[2].value,
+dob: inputs[3].value,
+marital: inputs[4].value,
+occupation: inputs[5].value,
+otherOccupation: block.querySelector(".otherBox input") ? block.querySelector(".otherBox input").value : "",
+education: inputs[7].value,
+mobile: inputs[8].value
+});
+});
+
+let formData = {
+formId: "FAM-" + Date.now(),
+members: members,
+sampraday: document.getElementById("sampraday").value,
+jainSurname: document.getElementById("jainSurname").value,
+gotra: document.getElementById("gotra").value,
+address: document.getElementById("address").value,
+district: document.getElementById("district").value,
+state: document.getElementById("state").value,
+email: document.getElementById("email").value,
+membership: document.getElementById("membership").value,
+dan: document.getElementById("donationAmount").value,
+source: document.getElementById("sourceSelect").value,
+representative: document.getElementById("representativeName").value
+};
+
+fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec",{
+method:"POST",
+body: JSON.stringify(formData),
+headers: {
+"Content-Type":"application/json"
+}
+})
+.then(res=>res.text())
+.then(response=>{
+alert("प्रपत्र सफलतापूर्वक जमा हो गया ✅");
+document.getElementById("familyForm").reset();
+document.getElementById("members").innerHTML="";
+addMember();
+})
+.catch(err=>{
+alert("डेटा भेजने में त्रुटि हुई ❌");
+});
+
+});
+
+</script>
 
