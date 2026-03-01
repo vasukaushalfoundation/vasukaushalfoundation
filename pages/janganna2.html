@@ -99,6 +99,45 @@ margin-top:40px;
 
 <form id="familyForm">
 
+  <div class="section-title">परिवार विवरण</div>
+
+<label>संप्रदाय</label>
+<select id="sampraday" required>
+<option value="">-- चयन करें --</option>
+<option>दिगम्बर</option>
+<option>श्वेताम्बर</option>
+</select>
+
+<label>सरनेम में जैन लिखते हैं?</label>
+<select id="jainSurname" required>
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
+<label>गोत्र</label>
+<input type="text" id="gotra">
+
+<label>पूरा पता</label>
+<textarea id="address" required></textarea>
+
+<label>पिन कोड</label>
+<input type="text" id="pincode" maxlength="6" onblur="fetchLocation()" required>
+
+<label>जिला</label>
+<input type="text" id="district" required>
+
+<label>राज्य</label>
+<input type="text" id="state" required>
+
+<label>ईमेल</label>
+<input type="email" id="email">
+
+<div class="section-title">परिवार सदस्य</div>
+
+<div id="members"></div>
+<button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
+
 <div class="section-title">परिवार सदस्य विवरण</div>
 
 <div id="members"></div>
@@ -298,3 +337,4 @@ function fetchLocation() {
     });
 }
 </script>
+
