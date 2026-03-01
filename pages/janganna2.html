@@ -4,51 +4,45 @@
 <meta charset="UTF-8">
 <title>जैन जनगणना प्रपत्र 2026</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body { font-family: Arial; background:#f5f1e6; padding:20px;}
-.container { max-width:950px; margin:auto; background:white; padding:30px; border-radius:10px;}
-
+.container { max-width:900px; margin:auto; background:white; padding:25px; border-radius:10px;}
 h1 { text-align:center; color:#8B0000; }
 
-.section-title {
-  margin-top:30px;
-  font-weight:bold;
-  font-size:22px;
-  color:#8B0000;
-}
-
-input, select, textarea {
-  width:100%;
-  padding:8px;
-  margin:6px 0;
-}
+input, select { width:100%; padding:8px; margin:6px 0; }
 
 button {
   background:#8B0000;
   color:white;
-  padding:12px;
+  padding:10px;
   border:none;
   cursor:pointer;
-  width:100%;
+  margin-top:8px;
 }
 
 .member-block {
   border:1px solid #ccc;
-  padding:10px;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:6px;
+  background:#fafafa;
+  position:relative;
+}
+
+.remove-btn {
+  background:red;
+  position:absolute;
+  right:10px;
+  top:10px;
+  padding:5px 8px;
+  font-size:12px;
+}
+.member-title {
+  font-weight:bold;
   margin-bottom:10px;
 }
-
-.footer-box {
-  margin-top:40px;
-  background:#fff8e1;
-  padding:20px;
-  border-radius:8px;
-  font-size:15px;
-}
-
-a { color:#8B0000; font-weight:bold; text-decoration:none; }
-a:hover { text-decoration:underline; }
-
 </style>
 </head>
 
@@ -57,278 +51,129 @@ a:hover { text-decoration:underline; }
 
 <h1>जैन जनगणना प्रपत्र 2026</h1>
 
-<label>दिगम्बर / श्वेताम्बर</label>
-<select>
+<form id="familyForm">
+
+<label>सम्प्रदाय</label>
+<select id="sampraday" required>
+<option value="">-- चयन करें --</option>
 <option>दिगम्बर</option>
 <option>श्वेताम्बर</option>
 </select>
 
-<label>क्या आप सरनेम में जैन लिखते हैं?</label>
-<select>
-<option>हाँ</option>
-<option>नहीं</option>
-</select>
-
 <label>गोत्र</label>
-<input type="text">
+<input type="text" id="gotra">
 
-<div class="section-title">परिवार सदस्य विवरण</div>
+<h3>परिवार सदस्य विवरण</h3>
 
 <div id="members"></div>
+
 <button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
 
-<div class="section-title">पता</div>
+<button type="submit">प्रपत्र जमा करें</button>
 
-<textarea placeholder="पूरा पता"></textarea>
-
-<label>पिन कोड</label>
-<input type="number" id="pincode" onkeyup="detectState()">
-
-<label>राज्य</label>
-<select id="state">
-<option value="">-- राज्य चुनें --</option>
-<option>आंध्र प्रदेश</option>
-<option>अरुणाचल प्रदेश</option>
-<option>असम</option>
-<option>बिहार</option>
-<option>छत्तीसगढ़</option>
-<option>गोवा</option>
-<option>गुजरात</option>
-<option>हरियाणा</option>
-<option>हिमाचल प्रदेश</option>
-<option>झारखंड</option>
-<option>कर्नाटक</option>
-<option>केरल</option>
-<option>मध्य प्रदेश</option>
-<option>महाराष्ट्र</option>
-<option>मणिपुर</option>
-<option>मेघालय</option>
-<option>मिजोरम</option>
-<option>नागालैंड</option>
-<option>ओडिशा</option>
-<option>पंजाब</option>
-<option>राजस्थान</option>
-<option>सिक्किम</option>
-<option>तमिलनाडु</option>
-<option>तेलंगाना</option>
-<option>त्रिपुरा</option>
-<option>उत्तर प्रदेश</option>
-<option>उत्तराखंड</option>
-<option>पश्चिम बंगाल</option>
-<option>अंडमान और निकोबार</option>
-<option>चंडीगढ़</option>
-<option>दादरा और नगर हवेली और दमन दीव</option>
-<option>दिल्ली</option>
-<option>जम्मू और कश्मीर</option>
-<option>लद्दाख</option>
-<option>लक्षद्वीप</option>
-<option>पुदुचेरी</option>
-</select>
-
-<label>जिला</label>
-<input type="text">
-
-<label>ईमेल</label>
-<input type="email">
-
-<div class="section-title">सदस्यता</div>
-
-<label>क्या आप संस्था के सदस्य बनना चाहते हैं?</label>
-<select>
-<option>हाँ</option>
-<option>नहीं</option>
-</select>
-
-<div class="section-title">दान सहयोग</div>
-
-<label>
-क्या आप अपनी चंचल लक्ष्मी को समाज सेवा एवं जिनशासन की उन्नति के पावन कार्यों में समर्पित करना चाहेंगे?
-</label>
-
-<select id="donationSelect" onchange="toggleAmount()">
-<option value="">-- चयन करें --</option>
-<option value="हाँ">हाँ</option>
-<option value="अभी नहीं">अभी नहीं</option>
-</select>
-
-<div id="amountBox" style="display:none;">
-<input type="number" placeholder="----------- रुपये प्रतिमाह">
-</div>
-
-<br>
-<button onclick="submitForm()">प्रपत्र जमा करें</button>
-
-<div id="thankyou" style="display:none; margin-top:20px; background:#e8f5e9; padding:20px;"></div>
-
-<div class="footer-box">
-
-<b>किसी भी प्रकार की सहायता हेतु संपर्क करें</b><br><br>
-
-यदि आपको प्रपत्र भरने, जानकारी देने या किसी अन्य सहायता की आवश्यकता हो, तो कृपया संपर्क करें-<br><br>
-
-📞 WhatsApp:  
-<a href="https://wa.me/918094807020" target="_blank">8094807020</a>,  
-<a href="https://wa.me/919376481008" target="_blank">9376481008</a><br><br>
-
-🌐 वेबसाइट:  
-<a href="https://www.vasukaushalfoundation.in" target="_blank">
-www.vasukaushalfoundation.in
-</a><br><br>
-
-📲 Instagram:  
-<a href="https://www.instagram.com/vasu_kaushal_foundation/" target="_blank">
-vasu_kaushal_foundation
-</a><br><br>
-
-📍 मुख्य कार्यालय:<br>
-वसु कौशल फाउंडेशन,<br>
-बूथ न. 57, सेक्टर-16,<br>
-फरीदाबाद, हरियाणा 121002
-
-</div>
+</form>
 
 </div>
 
 <script>
 
+let memberCount = 0;
+
 function addMember(){
-  document.getElementById("members").innerHTML += `
-    <div class="member-block">
 
-      <label>नाम</label>
-      <input class="m_name" required>
+  memberCount++;
 
-      <label>पिता/पति का नाम</label>
-      <input class="m_father">
+  var container = document.getElementById("members");
 
-      <label>लिंग</label>
-      <select class="m_gender">
-        <option>पुरुष</option>
-        <option>महिला</option>
-        <option>अन्य</option>
-      </select>
+  var div = document.createElement("div");
+  div.className = "member-block";
 
-      <label>जन्मतिथि</label>
-      <input type="date" class="m_dob">
+  div.innerHTML = `
+    <div class="member-title">सदस्य ${memberCount}</div>
+    <button type="button" class="remove-btn" onclick="removeMember(this)">X</button>
 
-      <label>वैवाहिक स्थिति</label>
-      <select class="m_marital">
-        <option>अविवाहित</option>
-        <option>विवाहित</option>
-        <option>विधुर / विधवा</option>
-        <option>तलाकशुदा</option>
-      </select>
+    <label>नाम</label>
+    <input class="m_name" required>
 
-      <label>व्यवसाय</label>
-      <select class="m_occupation" onchange="toggleOther(this)">
-        <option value="">-- चयन करें --</option>
-        <option>कृषि</option>
-        <option>व्यापारी</option>
-        <option>नौकरी</option>
-        <option>सरकारी सेवा</option>
-        <option>शिक्षक</option>
-        <option>डॉक्टर</option>
-        <option>इंजीनियर</option>
-        <option>गृहिणी</option>
-        <option>विद्यार्थी</option>
-        <option>सेवानिवृत्त</option>
-        <option>अन्य</option>
-      </select>
+    <label>पिता/पति का नाम</label>
+    <input class="m_father">
 
-      <input class="m_otherOcc" placeholder="यदि अन्य व्यवसाय" style="display:none;">
+    <label>लिंग</label>
+    <select class="m_gender">
+      <option value="">-- चयन करें --</option>
+      <option>पुरुष</option>
+      <option>महिला</option>
+      <option>अन्य</option>
+    </select>
 
-
-      <label>शिक्षा</label>
-      <select class="m_education">
-        <option>प्राथमिक</option>
-        <option>माध्यमिक</option>
-        <option>उच्च माध्यमिक</option>
-        <option>स्नातक</option>
-        <option>स्नातकोत्तर</option>
-        <option>डॉक्टरेट</option>
-      </select>
-
-      <label>मोबाइल नंबर</label>
-      <input class="m_mobile">
-
-    </div>
+    <label>मोबाइल नंबर</label>
+    <input class="m_mobile" required>
   `;
+
+  container.appendChild(div);
 }
 
-
-window.onload = function(){ addMember(); };
-
-function toggleAmount(){
-  var val = document.getElementById("donationSelect").value;
-  document.getElementById("amountBox").style.display =
-    val === "हाँ" ? "block" : "none";
+function removeMember(btn){
+  btn.parentElement.remove();
+  updateNumbering();
 }
 
-function detectState(){
-  var pin = document.getElementById("pincode").value;
-
-  if(pin.startsWith("12")){
-    document.getElementById("state").value = "हरियाणा";
-  }
-  if(pin.startsWith("11")){
-    document.getElementById("state").value = "दिल्ली";
-  }
-  if(pin.startsWith("30")){
-    document.getElementById("state").value = "राजस्थान";
-  }
+function updateNumbering(){
+  memberCount = 0;
+  document.querySelectorAll(".member-block").forEach(function(block){
+    memberCount++;
+    block.querySelector(".member-title").innerText = "सदस्य " + memberCount;
+  });
 }
 
-function submitForm(){
-
-var familyData = {
-  sampraday: document.querySelector("select").value,
-  jainSurname: document.querySelectorAll("select")[1].value,
-  gotra: document.querySelector("input[type='text']").value,
-  address: document.querySelector("textarea").value,
-  state: document.getElementById("state").value,
-  district: document.querySelectorAll("input[type='text']")[2].value,
-  email: document.querySelector("input[type='email']").value,
-  membership: document.querySelectorAll("select")[2].value,
-  donation: document.getElementById("donationSelect").value
+window.onload = function(){
+  addMember();
 };
 
-var members = [];
+document.getElementById("familyForm").addEventListener("submit", function(e){
 
-document.querySelectorAll(".member-block").forEach(function(block){
+  e.preventDefault();
 
-  members.push([
-    familyData.sampraday,
-    familyData.jainSurname,
-    familyData.gotra,
-    familyData.address,
-    familyData.state,
-    familyData.district,
-    familyData.email,
-    familyData.membership,
-    familyData.donation,
-    block.querySelector(".m_name").value,
-    block.querySelector(".m_father").value,
-    block.querySelector(".m_gender").value,
-    block.querySelector(".m_dob").value,
-    block.querySelector(".m_marital").value,
-    block.querySelector(".m_occupation").value,
-    block.querySelector(".m_otherOcc").value,
-    block.querySelector(".m_education").value,
-    block.querySelector(".m_mobile").value
-  ]);
+  let allData = [];
+
+  document.querySelectorAll(".member-block").forEach(function(block){
+
+    allData.push({
+      sampraday: document.getElementById("sampraday").value,
+      gotra: document.getElementById("gotra").value,
+      name: block.querySelector(".m_name").value,
+      father: block.querySelector(".m_father").value,
+      gender: block.querySelector(".m_gender").value,
+      mobile: block.querySelector(".m_mobile").value
+    });
+
+  });
+
+  // 📊 GOOGLE SHEET SUBMISSION
+  fetch("YOUR_GOOGLE_SCRIPT_URL", {
+    method:"POST",
+    body: JSON.stringify(allData)
+  });
+
+  // 📄 AUTO PDF EXPORT
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 10;
+  doc.text("जैन जनगणना प्रपत्र 2026", 10, y);
+  y += 10;
+
+  allData.forEach(function(member, index){
+    doc.text("सदस्य " + (index+1), 10, y); y+=8;
+    doc.text("नाम: " + member.name, 10, y); y+=8;
+    doc.text("मोबाइल: " + member.mobile, 10, y); y+=12;
+  });
+
+  doc.save("Jain_Janganna_Form.pdf");
+
+  alert("जय जिनेन्द्र 🙏\nफॉर्म सफलतापूर्वक जमा हुआ।");
 
 });
-
-fetch("YOUR_WEB_APP_URL", {
-  method: "POST",
-  body: JSON.stringify({members: members})
-})
-.then(res => {
-  alert("जय जिनेन्द्र 🙏\nफॉर्म भरने के लिए धन्यवाद।");
-})
-.catch(err => alert("त्रुटि हुई"));
-
-}
 
 </script>
 
