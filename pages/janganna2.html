@@ -12,10 +12,8 @@ background:linear-gradient(45deg,#7a0000,#b30000);
 color:white;
 padding:30px;
 text-align:center;
-line-height:1.7;
+line-height:1.8;
 }
-
-.header h1{margin-bottom:15px;}
 
 .container{
 max-width:1000px;
@@ -27,7 +25,7 @@ box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
 .section-title{
-margin-top:25px;
+margin-top:30px;
 font-weight:bold;
 color:#800000;
 border-bottom:2px solid #800000;
@@ -106,6 +104,50 @@ margin-top:40px;
 <div id="members"></div>
 <button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
 
+<div class="section-title">सदस्यता</div>
+
+<label>क्या आप संस्था के सदस्य बनना चाहेंगे?</label>
+<select id="membership" required>
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
+<div class="section-title">दान सहयोग</div>
+
+<label>
+क्या आप अपनी चंचल लक्ष्मी को समाज सेवा एवं जिनशासन की उन्नति के पावन कार्यों में समर्पित करना चाहेंगे?
+</label>
+
+<select id="donationSelect" onchange="toggleDonationAmount()">
+<option value="">-- चयन करें --</option>
+<option value="हाँ">हाँ</option>
+<option value="अभी नहीं">अभी नहीं</option>
+</select>
+
+<div id="donationAmountBox" style="display:none;">
+<label>रुपये प्रतिमाह</label>
+<input id="donationAmount">
+</div>
+
+<div class="section-title">फॉर्म प्राप्त माध्यम</div>
+
+<label>यह फॉर्म आपको किस माध्यम से प्राप्त हुआ है?</label>
+<select id="sourceSelect" onchange="toggleRepresentative()">
+<option value="">-- चयन करें --</option>
+<option>मंदिर जी</option>
+<option>पंचकल्याणक</option>
+<option>अन्य धार्मिक कार्यक्रम</option>
+<option value="संस्था प्रतिनिधि">संस्था प्रतिनिधि</option>
+<option>SMS/WhatsApp</option>
+<option>अन्य</option>
+</select>
+
+<div id="repNameBox" style="display:none;">
+<label>संस्था प्रतिनिधि का नाम</label>
+<input id="representativeName">
+</div>
+
 <button type="submit">प्रपत्र जमा करें</button>
 
 </form>
@@ -134,13 +176,13 @@ div.innerHTML=`
 <button type="button" class="remove-btn" onclick="this.parentElement.remove();updateNumbering()">X</button>
 
 <label>नाम</label>
-<input class="m_name" required>
+<input required>
 
 <label>पिता/पति का नाम</label>
-<input class="m_father">
+<input>
 
 <label>लिंग</label>
-<select class="m_gender" required>
+<select required>
 <option value="">-- चयन करें --</option>
 <option>पुरुष</option>
 <option>महिला</option>
@@ -148,10 +190,10 @@ div.innerHTML=`
 </select>
 
 <label>जन्मतिथि</label>
-<input type="date" class="m_dob" required>
+<input type="date" required>
 
 <label>वैवाहिक स्थिति</label>
-<select class="m_marital">
+<select>
 <option value="">-- चयन करें --</option>
 <option>विवाहित</option>
 <option>अविवाहित</option>
@@ -161,51 +203,38 @@ div.innerHTML=`
 </select>
 
 <label>व्यवसाय</label>
-<select class="m_occupation" onchange="toggleOtherOccupation(this)">
+<select onchange="toggleOther(this)">
 <option value="">-- चयन करें --</option>
 <option>व्यापार</option>
-<option>नौकरी (सरकारी)</option>
-<option>नौकरी (प्राइवेट)</option>
+<option>नौकरी</option>
 <option>डॉक्टर</option>
 <option>इंजीनियर</option>
-<option>वकील</option>
-<option>सीए</option>
 <option>शिक्षक</option>
-<option>कृषि</option>
-<option>गृहिणी</option>
 <option>विद्यार्थी</option>
+<option>गृहिणी</option>
 <option>सेवानिवृत्त</option>
-<option>समाजसेवी</option>
-<option>स्वरोजगार</option>
-<option>उद्योगपति</option>
 <option value="अन्य">अन्य</option>
 </select>
 
-<div class="otherOcc" style="display:none;">
+<div class="otherBox" style="display:none;">
 <label>अन्य व्यवसाय</label>
-<input class="m_otherOccupation">
+<input>
 </div>
 
 <label>शिक्षा</label>
-<select class="m_education" onchange="toggleOtherEducation(this)">
+<select>
 <option value="">-- चयन करें --</option>
-<option>अशिक्षित</option>
 <option>प्राथमिक</option>
 <option>माध्यमिक</option>
 <option>उच्च माध्यमिक</option>
 <option>स्नातक</option>
 <option>स्नातकोत्तर</option>
 <option>डॉक्टरेट</option>
-<option value="अन्य">अन्य</option>
+<option>अन्य</option>
 </select>
 
-<div class="otherEdu" style="display:none;">
-<label>अन्य शिक्षा</label>
-<input class="m_otherEducation">
-</div>
-
 <label>मोबाइल</label>
-<input type="tel" class="m_mobile" pattern="[0-9]{10}">
+<input type="tel">
 `;
 
 document.getElementById("members").appendChild(div);
@@ -219,13 +248,18 @@ b.querySelector("b").innerText="सदस्य "+memberCount;
 });
 }
 
-function toggleOtherOccupation(sel){
-let box=sel.parentElement.querySelector(".otherOcc");
-box.style.display=(sel.value==="अन्य")?"block":"none";
+function toggleDonationAmount(){
+document.getElementById("donationAmountBox").style.display=
+document.getElementById("donationSelect").value==="हाँ"?"block":"none";
 }
 
-function toggleOtherEducation(sel){
-let box=sel.parentElement.querySelector(".otherEdu");
+function toggleRepresentative(){
+document.getElementById("repNameBox").style.display=
+document.getElementById("sourceSelect").value==="संस्था प्रतिनिधि"?"block":"none";
+}
+
+function toggleOther(sel){
+let box=sel.parentElement.querySelector(".otherBox");
 box.style.display=(sel.value==="अन्य")?"block":"none";
 }
 
@@ -234,3 +268,33 @@ window.onload=addMember;
 
 </body>
 </html>
+
+
+<script>
+function fetchLocation() {
+  var pincode = document.getElementById("pincode").value;
+
+  if (pincode.length !== 6 || isNaN(pincode)) {
+    return;
+  }
+
+  document.getElementById("district").value = "लोड हो रहा है...";
+  document.getElementById("state").value = "";
+
+  fetch("https://api.postalpincode.in/pincode/" + pincode)
+    .then(response => response.json())
+    .then(data => {
+      if (data[0].Status === "Success") {
+        document.getElementById("district").value = data[0].PostOffice[0].District;
+        document.getElementById("state").value = data[0].PostOffice[0].State;
+      } else {
+        alert("गलत पिन कोड");
+        document.getElementById("district").value = "";
+        document.getElementById("state").value = "";
+      }
+    })
+    .catch(error => {
+      alert("Location fetch नहीं हो पाया");
+    });
+}
+</script>
