@@ -5,73 +5,20 @@
 <title>Jain Census Admin Panel</title>
 
 <style>
-body{
-font-family:Arial;
-background:#f4f6f9;
-padding:20px;
-margin:0;
-}
-
+body{font-family:Arial;background:#f4f6f9;padding:20px;margin:0;}
 h2{margin-bottom:20px;}
 table{width:100%;border-collapse:collapse;background:white;margin-top:15px;}
 th,td{border:1px solid #ccc;padding:8px;font-size:13px;text-align:left;}
 th{background:#800000;color:white;}
 button{padding:8px 12px;background:#800000;color:white;border:none;margin:5px;cursor:pointer;}
 select,input{padding:6px;margin:5px;}
-
-.cardBox{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
-min-width:200px;
-text-align:center;
-cursor:pointer;
-}
-
-/* LOADER */
-
-#loadingScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-color:#00ff00;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:9999;
-overflow:hidden;
-}
-
-#matrixCanvas{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-}
-
-.loader-content{
-position:relative;
-z-index:2;
-text-align:center;
-}
-
-#terminalText{
-font-family:monospace;
-font-size:18px;
-margin-bottom:20px;
-white-space:pre-line;
-}
-
-#percent{
-font-size:40px;
-font-weight:bold;
-}
+.cardBox{background:white;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);min-width:200px;text-align:center;}
+#loadingScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:#00ff00;display:flex;justify-content:center;align-items:center;flex-direction:column;z-index:9999;}
+#matrixCanvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+.loader-content{position:relative;z-index:2;text-align:center;}
+#terminalText{font-family:monospace;font-size:18px;margin-bottom:20px;white-space:pre-line;}
+#percent{font-size:40px;font-weight:bold;}
+.filterBox{background:white;padding:15px;border-radius:10px;margin-bottom:15px;}
 </style>
 </head>
 
@@ -80,231 +27,226 @@ font-weight:bold;
 <h2>Jain Census Admin Dashboard</h2>
 
 <div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
-
-<div class="cardBox">
-<h3>Total Families</h3>
-<h2 id="totalFamilies">0</h2>
+<div class="cardBox"><h3>Total Families</h3><h2 id="totalFamilies">0</h2></div>
+<div class="cardBox"><h3>Total Members</h3><h2 id="totalMembers">0</h2></div>
+<div class="cardBox"><h3>Birthdays This Month</h3><h2 id="monthBirthdays">0</h2></div>
 </div>
 
-<div class="cardBox">
-<h3>Total Members</h3>
-<h2 id="totalMembers">0</h2>
-</div>
-
-<div class="cardBox">
-<h3>Birthdays This Month</h3>
-<h2 id="monthBirthdays">0</h2>
-</div>
-
+<div class="filterBox">
+<h3>DOB Range Filter</h3>
+From <input type="date" id="dobFrom">
+To <input type="date" id="dobTo">
+<button onclick="filterDOB()">Apply</button>
+<button onclick="resetAll()">Reset</button>
+<hr>
+<h3>Column Filter</h3>
+<select id="columnSelect"></select>
+<select id="valueSelect"></select>
+<button onclick="applyColumnFilter()">Apply Filter</button>
 </div>
 
 <div id="tableContainer"></div>
 
-<!-- LOADING SCREEN -->
 <div id="loadingScreen">
-  <canvas id="matrixCanvas"></canvas>
-  <div class="loader-content">
-    <div id="terminalText"></div>
-    <div id="percent">0%</div>
-  </div>
+<canvas id="matrixCanvas"></canvas>
+<div class="loader-content">
+<div id="terminalText"></div>
+<div id="percent">0%</div>
+</div>
 </div>
 
 <script>
 
-/* ===== LOADER CONTROL FLAGS ===== */
+let sheetData=[];
+let currentData=[];
+let dataLoaded=false;
+let minTimePassed=false;
 
-let dataLoaded = false;
-let minTimePassed = false;
-let sheetData = [];
-
-/* ===== WINDOW LOAD ===== */
-
-window.onload = function(){
-
-// Minimum 8 sec timer
-setTimeout(()=>{
-    minTimePassed = true;
-    checkLoader();
-},8000);
-
-// Start data loading immediately
+window.onload=function(){
+setTimeout(()=>{minTimePassed=true;checkLoader();},4000);
 loadData();
-
 startMatrix();
 startTyping();
 startCounter();
-
 };
-
-/* ===== CHECK LOADER ===== */
 
 function checkLoader(){
 if(dataLoaded && minTimePassed){
-    document.getElementById("loadingScreen").style.display="none";
+document.getElementById("loadingScreen").style.display="none";
 }
 }
-
-/* ===== DATA LOAD ===== */
 
 function loadData(){
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
-    sheetData=data;
-    processDashboard(data);
-    renderTable(data);
-
-    dataLoaded = true;
-    checkLoader();
+sheetData=data||[];
+currentData=sheetData;
+populateColumns();
+processDashboard(currentData);
+renderTable(currentData);
+dataLoaded=true;
+checkLoader();
+})
+.catch(()=>{
+sheetData=[];
+currentData=[];
+renderTable([]);
+dataLoaded=true;
+checkLoader();
 });
 }
-
-/* ===== DASHBOARD PROCESS ===== */
 
 function processDashboard(data){
-
 document.getElementById("totalMembers").innerText=data.length;
 
-let familySet=new Set();
-data.forEach(row=>{
-familySet.add(Object.values(row)[2]);
-});
-document.getElementById("totalFamilies").innerText=familySet.size;
+let families=new Set();
+data.forEach(r=>families.add(Object.values(r)[2]));
+document.getElementById("totalFamilies").innerText=families.size;
 
-let currentMonth=new Date().getMonth();
-let birthdayCount=0;
-
-data.forEach(row=>{
-let dob=Object.values(row)[7];
+let month=new Date().getMonth();
+let count=0;
+data.forEach(r=>{
+let dob=Object.values(r)[7];
 if(dob){
-let dobDate=new Date(dob);
-if(dobDate.getMonth()===currentMonth){
-birthdayCount++;
-}
+let d=new Date(dob);
+if(!isNaN(d) && d.getMonth()===month) count++;
 }
 });
-document.getElementById("monthBirthdays").innerText=birthdayCount;
+document.getElementById("monthBirthdays").innerText=count;
 }
-
-/* ===== TABLE RENDER ===== */
 
 function renderTable(data){
-
-if(data.length===0){
-document.getElementById("tableContainer").innerHTML="No Data Found";
+if(!data || data.length===0){
+document.getElementById("tableContainer").innerHTML="<b>No Data Found</b>";
 return;
 }
-
 let html="<table><tr>";
-
-Object.keys(data[0]).forEach(key=>{
-html+="<th>"+key+"</th>";
-});
-
+Object.keys(data[0]).forEach(k=>html+="<th>"+k+"</th>");
 html+="</tr>";
-
-data.forEach(row=>{
+data.forEach(r=>{
 html+="<tr>";
-Object.values(row).forEach(val=>{
-html+="<td>"+val+"</td>";
-});
+Object.values(r).forEach(v=>html+="<td>"+(v||"")+"</td>");
 html+="</tr>";
 });
-
 html+="</table>";
-
 document.getElementById("tableContainer").innerHTML=html;
 }
 
-/* ===== MATRIX EFFECT ===== */
+function populateColumns(){
+let col=document.getElementById("columnSelect");
+col.innerHTML="";
+Object.keys(sheetData[0]||{}).forEach((k,i)=>{
+let opt=document.createElement("option");
+opt.value=i;
+opt.text=k;
+col.appendChild(opt);
+});
+col.onchange=populateValues;
+populateValues();
+}
+
+function populateValues(){
+let colIndex=document.getElementById("columnSelect").value;
+let valSel=document.getElementById("valueSelect");
+valSel.innerHTML="";
+let unique=new Set();
+sheetData.forEach(r=>{
+let v=Object.values(r)[colIndex];
+if(v) unique.add(v);
+});
+unique.forEach(v=>{
+let opt=document.createElement("option");
+opt.value=v;
+opt.text=v;
+valSel.appendChild(opt);
+});
+}
+
+function applyColumnFilter(){
+let col=document.getElementById("columnSelect").value;
+let val=document.getElementById("valueSelect").value;
+currentData=sheetData.filter(r=>String(Object.values(r)[col])===val);
+renderTable(currentData);
+processDashboard(currentData);
+}
+
+function filterDOB(){
+let from=document.getElementById("dobFrom").value;
+let to=document.getElementById("dobTo").value;
+if(!from||!to) return;
+let f=new Date(from);
+let t=new Date(to); t.setHours(23,59,59,999);
+currentData=sheetData.filter(r=>{
+let d=new Date(Object.values(r)[7]);
+return !isNaN(d) && d>=f && d<=t;
+});
+renderTable(currentData);
+processDashboard(currentData);
+}
+
+function resetAll(){
+currentData=sheetData;
+renderTable(currentData);
+processDashboard(currentData);
+document.getElementById("dobFrom").value="";
+document.getElementById("dobTo").value="";
+populateValues();
+}
+
+/* Loader Effects */
 
 function startMatrix(){
-
 const canvas=document.getElementById("matrixCanvas");
 const ctx=canvas.getContext("2d");
-
 canvas.height=window.innerHeight;
 canvas.width=window.innerWidth;
-
-let letters="01";
-letters=letters.split("");
-
+let letters="01".split("");
 let fontSize=14;
 let columns=canvas.width/fontSize;
-let drops=[];
-
-for(let x=0;x<columns;x++) drops[x]=1;
-
+let drops=Array(Math.floor(columns)).fill(1);
 function draw(){
 ctx.fillStyle="rgba(0,0,0,0.05)";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 ctx.fillStyle="#0f0";
 ctx.font=fontSize+"px monospace";
-
 for(let i=0;i<drops.length;i++){
 let text=letters[Math.floor(Math.random()*letters.length)];
 ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-drops[i]=0;
-
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
 drops[i]++;
 }
 }
 setInterval(draw,33);
 }
 
-/* ===== TERMINAL EFFECT ===== */
-
 function startTyping(){
-
-let textLines=[
-"Initializing Secure System...",
-"Scanning Database...",
-"Encrypting Records...",
-"Verifying Identity...",
-"System Ready..."
-];
-
+let lines=["Initializing System...","Loading Database...","Applying Security...","System Ready..."];
 let terminal=document.getElementById("terminalText");
-let lineIndex=0;
-let charIndex=0;
-
-function typeEffect(){
-if(lineIndex<textLines.length){
-if(charIndex<textLines[lineIndex].length){
-terminal.innerHTML+=textLines[lineIndex].charAt(charIndex);
-charIndex++;
-setTimeout(typeEffect,40);
+let i=0,j=0;
+function type(){
+if(i<lines.length){
+if(j<lines[i].length){
+terminal.innerHTML+=lines[i].charAt(j);
+j++; setTimeout(type,30);
 }else{
-terminal.innerHTML+="\n";
-lineIndex++;
-charIndex=0;
-setTimeout(typeEffect,300);
+terminal.innerHTML+="\n"; i++; j=0; setTimeout(type,200);
 }
 }
 }
-typeEffect();
+type();
 }
-
-/* ===== PERCENT COUNTER ===== */
 
 function startCounter(){
-
 let percent=0;
-let percentDiv=document.getElementById("percent");
-
-let interval=setInterval(()=>{
+let div=document.getElementById("percent");
+let int=setInterval(()=>{
 percent++;
-percentDiv.innerText=percent+"%";
-if(percent>=100){
-clearInterval(interval);
-}
-},80);
-
+div.innerText=percent+"%";
+if(percent>=100) clearInterval(int);
+},40);
 }
 
 </script>
-
 </body>
 </html>
