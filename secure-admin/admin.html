@@ -11,7 +11,7 @@ table{width:100%;border-collapse:collapse;background:white;margin-top:15px;}
 th,td{border:1px solid #ccc;padding:8px;font-size:13px;text-align:left;}
 th{background:#800000;color:white;}
 button{padding:8px 12px;background:#800000;color:white;border:none;margin:5px;cursor:pointer;}
-select{padding:6px;margin:5px;}
+select,input{padding:6px;margin:5px;}
 .cardBox{
 background:white;
 padding:20px;
@@ -56,6 +56,13 @@ font-size:13px;
 </div>
 
 </div>
+
+<hr>
+
+<h3>DOB Range Filter</h3>
+From: <input type="date" id="dobFrom">
+To: <input type="date" id="dobTo">
+<button onclick="filterDOBRange()">Apply DOB Filter</button>
 
 <hr>
 
@@ -164,6 +171,34 @@ renderTable(filtered);
 processDashboard(filtered);
 }
 
+function filterDOBRange(){
+
+let from = document.getElementById("dobFrom").value;
+let to = document.getElementById("dobTo").value;
+
+if(!from || !to){
+alert("Please select both dates");
+return;
+}
+
+let fromDate = new Date(from);
+let toDate = new Date(to);
+
+fromDate.setHours(0,0,0,0);
+toDate.setHours(23,59,59,999);
+
+let filtered = sheetData.filter(row=>{
+let dob = Object.values(row)[7];
+if(!dob) return false;
+let rowDate = new Date(dob);
+return rowDate >= fromDate && rowDate <= toDate;
+});
+
+currentData = filtered;
+renderTable(filtered);
+processDashboard(filtered);
+}
+
 function populateOptions(){
 let colIndex = document.getElementById("filterType").value;
 let dropdown = document.getElementById("filterValue");
@@ -231,6 +266,8 @@ processDashboard(filtered);
 function resetFilters(){
 activeFilters = [];
 document.getElementById("activeFilters").innerHTML="";
+document.getElementById("dobFrom").value="";
+document.getElementById("dobTo").value="";
 currentData = sheetData;
 renderTable(sheetData);
 processDashboard(sheetData);
