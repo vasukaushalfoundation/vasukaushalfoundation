@@ -1,101 +1,106 @@
-alert("JS Loaded");
+/* ===============================
+   FILTER SYSTEM (Month + Column)
+================================ */
 
-function toggleMenu() {
-  document.getElementById("mobileMenu").classList.toggle("show");
+let sheetData = [];
+let currentData = [];
+
+// DATA LOAD hone ke baad ye 2 variables set hone chahiye:
+// sheetData = data;
+// currentData = sheetData;
+
+// Month + Column Combined Filter
+function applyFilters() {
+
+  const month = document.getElementById("monthSelect")?.value || "";
+  const col = document.getElementById("columnSelect")?.value || "";
+  const val = document.getElementById("valueSelect")?.value || "";
+
+  currentData = sheetData.filter(row => {
+
+    // 🔹 Month Filter
+    if (month !== "") {
+      let dob = Object.values(row)[7];
+      if (!dob) return false;
+      let d = new Date(dob);
+      if (isNaN(d) || d.getMonth() != month) return false;
+    }
+
+    // 🔹 Column Filter
+    if (col !== "" && val !== "") {
+      if (String(Object.values(row)[col]) !== val) return false;
+    }
+
+    return true;
+  });
+
+  renderTable(currentData);
+  processDashboard(currentData);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
 
-  const loader = document.getElementById("loadingScreen");
-  const percentText = document.getElementById("percent");
-  const terminal = document.getElementById("terminalText");
+/* ===============================
+   RESET
+================================ */
 
-  /* ===== MATRIX EFFECT ===== */
+function resetAll() {
+  currentData = sheetData;
 
-  const canvas = document.getElementById("matrixCanvas");
-  const ctx = canvas.getContext("2d");
+  if(document.getElementById("monthSelect"))
+    document.getElementById("monthSelect").value = "";
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if(document.getElementById("columnSelect"))
+    document.getElementById("columnSelect").value = "";
 
-  const letters = "01";
-  const fontSize = 14;
-  const columns = canvas.width / fontSize;
-  const drops = [];
+  if(document.getElementById("valueSelect"))
+    document.getElementById("valueSelect").innerHTML =
+      '<option value="">Select Value</option>';
 
-  for (let x = 0; x < columns; x++) {
-    drops[x] = 1;
+  renderTable(currentData);
+  processDashboard(currentData);
+}
+
+
+/* ===============================
+   CSV DOWNLOAD (Excel Friendly)
+================================ */
+
+function downloadCSV() {
+
+  if (!currentData || currentData.length === 0) {
+    alert("No Data To Download");
+    return;
   }
 
-  function drawMatrix() {
-    ctx.fillStyle = "rgba(0,0,0,0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  let csv = "";
+  let headers = Object.keys(currentData[0]);
+  csv += headers.join(",") + "\n";
 
-    ctx.fillStyle = "#00ff88";
-    ctx.font = fontSize + "px monospace";
+  currentData.forEach(row => {
 
-    for (let i = 0; i < drops.length; i++) {
-      const text = letters.charAt(Math.floor(Math.random() * letters.length));
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    let line = Object.values(row).map(value => {
 
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-        drops[i] = 0;
+      // Date Format Fix
+      if (typeof value === "string" && value.includes("T") && value.includes("Z")) {
+        let d = new Date(value);
+        if (!isNaN(d)) {
+          let day = String(d.getDate()).padStart(2, '0');
+          let month = String(d.getMonth() + 1).padStart(2, '0');
+          let year = d.getFullYear();
+          return `"${day}-${month}-${year}"`;
+        }
+      }
 
-      drops[i]++;
-    }
-  }
+      return `"${value || ""}"`;
 
-  setInterval(drawMatrix, 35);
+    }).join(",");
 
-  /* ===== TERMINAL TEXT ===== */
+    csv += line + "\n";
+  });
 
-  const messages = [
-    "Initializing Secure System...",
-    "Scanning Database...",
-    "Decrypting Records...",
-    "Loading Protected Files..."
-  ];
-
-  let msgIndex = 0;
-  let charIndex = 0;
-
-  function typeEffect() {
-    if (charIndex < messages[msgIndex].length) {
-      terminal.innerHTML += messages[msgIndex].charAt(charIndex);
-      charIndex++;
-      setTimeout(typeEffect, 40);
-    } else {
-      setTimeout(() => {
-        terminal.innerHTML = "";
-        charIndex = 0;
-        msgIndex = (msgIndex + 1) % messages.length;
-        typeEffect();
-      }, 800);
-    }
-  }
-
-  typeEffect();
-
-  /* ===== PERCENT COUNTER ===== */
-
-  let percent = 0;
-
-  const interval = setInterval(() => {
-    percent++;
-    percentText.innerText = percent + "%";
-
-    if (percent >= 100) {
-      clearInterval(interval);
-
-      setTimeout(() => {
-        loader.classList.add("hide");
-      }, 500);
-
-      setTimeout(() => {
-        loader.style.display = "none";
-      }, 1500);
-    }
-
-  }, 90); // 9 seconds total
-
-});
+  const blob = new Blob([csv], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Filtered_Data.csv";
+  link.click();
+}
