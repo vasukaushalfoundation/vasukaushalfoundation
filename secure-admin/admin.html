@@ -6,13 +6,23 @@
 
 <style>
 body{font-family:Arial;background:#f4f6f9;padding:20px;}
-table{width:100%;border-collapse:collapse;background:white;}
+table{width:100%;border-collapse:collapse;background:white;margin-top:15px;}
 th,td{border:1px solid #ccc;padding:8px;font-size:13px;}
 th{background:#800000;color:white;}
-button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom:15px;}
+button{padding:8px 12px;background:#800000;color:white;border:none;margin:5px;}
+input{padding:6px;margin:5px;}
+.cardBox{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+min-width:200px;
+text-align:center;
+cursor:pointer;
+}
 </style>
-
 </head>
+
 <body>
 
 <h2>Jain Census Admin Dashboard</h2>
@@ -29,55 +39,51 @@ button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom
 <h2 id="totalMembers">0</h2>
 </div>
 
-<div class="cardBox">
-<h3>Total Districts</h3>
-<h2 id="totalDistricts">0</h2>
-</div>
-
-<div class="cardBox">
+<div class="cardBox" onclick="filterCurrentMonthBirthdays()">
 <h3>Birthdays This Month</h3>
 <h2 id="monthBirthdays">0</h2>
 </div>
 
 </div>
 
-<div id="locationWise"></div>
-
 <hr>
 
+<h3>Advanced Filters</h3>
+
+<input type="text" id="nameFilter" placeholder="Search Name">
+<input type="text" id="cityFilter" placeholder="City">
+<input type="date" id="dobFilter">
+<input type="text" id="sampradayFilter" placeholder="Sampraday">
+<input type="text" id="locationFilter" placeholder="Location">
+<input type="text" id="workFilter" placeholder="Work">
+<input type="text" id="donationFilter" placeholder="Donation">
+
+<br>
+
+<button onclick="applyFilters()">Apply Filters</button>
+<button onclick="resetFilters()">Reset</button>
 <button onclick="downloadCSV()">Download CSV</button>
 
 <div id="tableContainer"></div>
 
-<style>
-.cardBox{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
-min-width:200px;
-text-align:center;
-}
-</style>
-
 <script>
 
 let sheetData = [];
+let currentData = [];
 
 window.onload = function(){
 loadData();
 }
 
 function loadData(){
-
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
   sheetData = data;
+  currentData = data;
   processDashboard(data);
   renderTable(data);
 });
-
 }
 
 function processDashboard(data){
@@ -85,32 +91,14 @@ function processDashboard(data){
 // Total Members
 document.getElementById("totalMembers").innerText = data.length;
 
-// Total Families (unique Family ID column index 2)
+// Total Families (Family ID index 2)
 let familySet = new Set();
 data.forEach(row=>{
 familySet.add(Object.values(row)[2]);
 });
 document.getElementById("totalFamilies").innerText = familySet.size;
 
-// Location wise (District column index 12)
-let districtCount = {};
-data.forEach(row=>{
-let district = Object.values(row)[12];
-districtCount[district] = (districtCount[district] || 0) + 1;
-});
-
-document.getElementById("totalDistricts").innerText = Object.keys(districtCount).length;
-
-// Show location wise breakdown
-let locHTML = "<h3>Location Wise Members</h3><ul>";
-for(let d in districtCount){
-locHTML += `<li>${d} : ${districtCount[d]}</li>`;
-}
-locHTML += "</ul>";
-
-document.getElementById("locationWise").innerHTML = locHTML;
-
-// Current Month Birthdays (DOB column index 7)
+// Current Month Birthday Count (DOB index 7)
 let currentMonth = new Date().getMonth();
 let birthdayCount = 0;
 
@@ -126,6 +114,61 @@ birthdayCount++;
 
 document.getElementById("monthBirthdays").innerText = birthdayCount;
 
+}
+
+function filterCurrentMonthBirthdays(){
+
+let currentMonth = new Date().getMonth();
+
+let filtered = sheetData.filter(row=>{
+let dob = Object.values(row)[7];
+if(dob){
+let dobDate = new Date(dob);
+return dobDate.getMonth() === currentMonth;
+}
+return false;
+});
+
+currentData = filtered;
+renderTable(filtered);
+}
+
+function applyFilters(){
+
+let name = document.getElementById("nameFilter").value.toLowerCase();
+let city = document.getElementById("cityFilter").value.toLowerCase();
+let dob = document.getElementById("dobFilter").value;
+let sampraday = document.getElementById("sampradayFilter").value.toLowerCase();
+let location = document.getElementById("locationFilter").value.toLowerCase();
+let work = document.getElementById("workFilter").value.toLowerCase();
+let donation = document.getElementById("donationFilter").value;
+
+let filtered = sheetData.filter(row=>{
+
+let values = Object.values(row).map(v=>String(v).toLowerCase());
+
+let combined = values.join(" ");
+
+let nameMatch = combined.includes(name);
+let cityMatch = combined.includes(city);
+let dobMatch = dob==="" || combined.includes(dob);
+let sampradayMatch = combined.includes(sampraday);
+let locationMatch = combined.includes(location);
+let workMatch = combined.includes(work);
+let donationMatch = donation==="" || combined.includes(donation);
+
+return nameMatch && cityMatch && dobMatch && sampradayMatch && locationMatch && workMatch && donationMatch;
+
+});
+
+currentData = filtered;
+renderTable(filtered);
+}
+
+function resetFilters(){
+document.querySelectorAll("input").forEach(i=>i.value="");
+currentData = sheetData;
+renderTable(sheetData);
 }
 
 function renderTable(data){
@@ -159,19 +202,24 @@ document.getElementById("tableContainer").innerHTML=html;
 
 function downloadCSV(){
 
+if(currentData.length===0){
+alert("No Data To Download");
+return;
+}
+
 let csv="";
-let headers=Object.keys(sheetData[0]);
+let headers=Object.keys(currentData[0]);
 
 csv+=headers.join(",")+"\n";
 
-sheetData.forEach(row=>{
+currentData.forEach(row=>{
 csv+=Object.values(row).join(",")+"\n";
 });
 
 let blob=new Blob([csv],{type:"text/csv"});
 let a=document.createElement("a");
 a.href=URL.createObjectURL(blob);
-a.download="jain_census_data.csv";
+a.download="filtered_jain_census_data.csv";
 a.click();
 
 }
@@ -180,4 +228,3 @@ a.click();
 
 </body>
 </html>
-
