@@ -216,15 +216,33 @@ processDashboard(currentData);
 }
 
 function filterDOB(){
+
 let from=document.getElementById("dobFrom").value;
 let to=document.getElementById("dobTo").value;
-if(!from||!to) return;
-let f=new Date(from);
-let t=new Date(to); t.setHours(23,59,59,999);
-currentData=sheetData.filter(r=>{
-let d=new Date(Object.values(r)[7]);
-return !isNaN(d) && d>=f && d<=t;
+
+if(!from || !to) return;
+
+// Month-Day nikaal lo
+let fromDate = new Date(from);
+let toDate = new Date(to);
+
+let fromMD = (fromDate.getMonth()+1)*100 + fromDate.getDate();
+let toMD   = (toDate.getMonth()+1)*100 + toDate.getDate();
+
+currentData = sheetData.filter(r=>{
+
+let dob = Object.values(r)[7];
+if(!dob) return false;
+
+let d = new Date(dob);
+if(isNaN(d)) return false;
+
+let md = (d.getMonth()+1)*100 + d.getDate();
+
+return md >= fromMD && md <= toMD;
+
 });
+
 renderTable(currentData);
 processDashboard(currentData);
 }
@@ -304,4 +322,5 @@ if(percent>=100) clearInterval(int);
 </script>
 </body>
 </html>
+
 
