@@ -5,11 +5,14 @@
 let sheetData = [];
 let currentData = [];
 
-// DATA LOAD hone ke baad ye 2 variables set hone chahiye:
+// 👉 DATA LOAD hone ke baad ye set karo:
 // sheetData = data;
 // currentData = sheetData;
 
-// Month + Column Combined Filter
+/* ===============================
+   APPLY FILTERS
+================================ */
+
 function applyFilters() {
 
   const month = document.getElementById("monthSelect")?.value || "";
@@ -18,15 +21,19 @@ function applyFilters() {
 
   currentData = sheetData.filter(row => {
 
-    // 🔹 Month Filter
+    /* 🔹 MONTH FILTER (DOB Index = 7) */
     if (month !== "") {
+
       let dob = Object.values(row)[7];
       if (!dob) return false;
+
       let d = new Date(dob);
-      if (isNaN(d) || d.getMonth() != month) return false;
+      if (isNaN(d)) return false;
+
+      if (d.getMonth() != month) return false;
     }
 
-    // 🔹 Column Filter
+    /* 🔹 COLUMN FILTER */
     if (col !== "" && val !== "") {
       if (String(Object.values(row)[col]) !== val) return false;
     }
@@ -40,24 +47,65 @@ function applyFilters() {
 
 
 /* ===============================
-   RESET
+   RESET SYSTEM
 ================================ */
 
 function resetAll() {
+
   currentData = sheetData;
 
-  if(document.getElementById("monthSelect"))
+  if (document.getElementById("monthSelect"))
     document.getElementById("monthSelect").value = "";
 
-  if(document.getElementById("columnSelect"))
+  if (document.getElementById("columnSelect"))
     document.getElementById("columnSelect").value = "";
 
-  if(document.getElementById("valueSelect"))
+  if (document.getElementById("valueSelect"))
     document.getElementById("valueSelect").innerHTML =
       '<option value="">Select Value</option>';
 
   renderTable(currentData);
   processDashboard(currentData);
+}
+
+
+/* ===============================
+   TABLE RENDER WITH DOB FORMAT FIX
+================================ */
+
+function renderTable(data) {
+
+  const tableBody = document.getElementById("tableBody");
+  if (!tableBody) return;
+
+  tableBody.innerHTML = "";
+
+  data.forEach(row => {
+
+    let tr = document.createElement("tr");
+
+    Object.values(row).forEach((value, index) => {
+
+      let td = document.createElement("td");
+
+      /* 🔹 DOB FORMAT FIX (Column Index 7) */
+      if (index === 7 && value) {
+        let d = new Date(value);
+        if (!isNaN(d)) {
+          let day = String(d.getDate()).padStart(2, '0');
+          let month = String(d.getMonth() + 1).padStart(2, '0');
+          let year = d.getFullYear();
+          value = `${day}-${month}-${year}`;
+        }
+      }
+
+      td.innerText = value || "";
+      tr.appendChild(td);
+
+    });
+
+    tableBody.appendChild(tr);
+  });
 }
 
 
@@ -78,10 +126,10 @@ function downloadCSV() {
 
   currentData.forEach(row => {
 
-    let line = Object.values(row).map(value => {
+    let line = Object.values(row).map((value, index) => {
 
-      // Date Format Fix
-      if (typeof value === "string" && value.includes("T") && value.includes("Z")) {
+      /* 🔹 DOB FIX FOR CSV */
+      if (index === 7 && value) {
         let d = new Date(value);
         if (!isNaN(d)) {
           let day = String(d.getDate()).padStart(2, '0');
