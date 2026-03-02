@@ -1,60 +1,211 @@
-<script>
-let pass = prompt("Admin Password डालें");
-
-if(pass !== "VKF2026"){
-  document.body.innerHTML = "<h2 style='color:red'>Access Denied</h2>";
-}
-</script>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>VKF Admin Dashboard</title>
 
 <style>
-body{font-family:Arial;background:#f4f6f9;padding:20px;}
-table{width:100%;border-collapse:collapse;background:white;}
-th,td{border:1px solid #ccc;padding:8px;font-size:13px;}
-th{background:#800000;color:white;}
-button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom:15px;}
-</style>
+body{
+margin:0;
+font-family:Arial;
+background:#f4f6f9;
+}
 
+.header{
+background:#800000;
+color:white;
+padding:15px 25px;
+font-size:20px;
+}
+
+.dashboard{
+display:flex;
+gap:20px;
+padding:20px;
+}
+
+.card{
+flex:1;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.card h2{
+margin:0;
+color:#800000;
+}
+
+.filters{
+padding:0 20px 20px 20px;
+}
+
+input,select{
+padding:8px;
+margin-right:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:6px;
+font-size:13px;
+}
+
+th{
+background:#800000;
+color:white;
+}
+
+</style>
 </head>
+
 <body>
 
-<h2>Jain Census Admin Panel</h2>
+<script>
+let pass = prompt("Enter Admin Password");
 
-<button onclick="loadData()">Load Data</button>
-<button onclick="downloadCSV()">Download CSV</button>
+if(pass !== "VKF2026"){
+document.body.innerHTML="<h2 style='color:red;text-align:center;margin-top:50px;'>Access Denied</h2>";
+}
+</script>
 
-<div id="tableContainer"></div>
+<div class="header">
+Vasu Kaushal Foundation - Jain Census Admin
+</div>
+
+<div class="dashboard">
+<div class="card">
+<h3>Total Families</h3>
+<h2 id="familyCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Total Members</h3>
+<h2 id="memberCount">0</h2>
+</div>
+
+<div class="card">
+<h3>Total Districts</h3>
+<h2 id="districtCount">0</h2>
+</div>
+</div>
+
+<div class="filters">
+<input type="text" id="searchBox" placeholder="Search by Name" onkeyup="applyFilters()">
+
+<select id="districtFilter" onchange="applyFilters()">
+<option value="">All Districts</option>
+</select>
+</div>
+
+<div id="tableContainer" style="padding:20px;"></div>
 
 <script>
 
-let sheetData = [];
-
-function loadData(){
+let rawData=[];
+let familyData={};
 
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
-  sheetData = data;
-  renderTable(data);
+rawData=data;
+groupFamilies(data);
+populateDistricts(data);
+updateDashboard();
+renderTable();
+});
+
+function groupFamilies(data){
+
+familyData={};
+
+data.forEach(row=>{
+
+let fam=row["3"] || row["familyId"] || row["Family ID"] || row["familyId"];
+
+let familyId=row[Object.keys(row)[2]];
+
+if(!familyData[familyId]){
+familyData[familyId]={
+district:row[Object.keys(row)[12]],
+members:[]
+};
+}
+
+familyData[familyId].members.push(row);
+
 });
 
 }
 
-function renderTable(data){
+function updateDashboard(){
 
-if(data.length===0){
-  document.getElementById("tableContainer").innerHTML="No Data Found";
-  return;
+document.getElementById("familyCount").innerText=
+Object.keys(familyData).length;
+
+document.getElementById("memberCount").innerText=
+rawData.length;
+
+let districts=new Set();
+rawData.forEach(r=>{
+districts.add(r[Object.keys(r)[12]]);
+});
+
+document.getElementById("districtCount").innerText=districts.size;
+
 }
+
+function populateDistricts(data){
+
+let districts=new Set();
+
+data.forEach(r=>{
+districts.add(r[Object.keys(r)[12]]);
+});
+
+let select=document.getElementById("districtFilter");
+
+districts.forEach(d=>{
+let opt=document.createElement("option");
+opt.value=d;
+opt.textContent=d;
+select.appendChild(opt);
+});
+
+}
+
+function applyFilters(){
+
+let search=document.getElementById("searchBox").value.toLowerCase();
+let district=document.getElementById("districtFilter").value;
+
+let filtered=rawData.filter(r=>{
+
+let name=r[Object.keys(r)[4]].toLowerCase();
+let dist=r[Object.keys(r)[12]];
+
+return (name.includes(search)) &&
+(district==="" || dist===district);
+
+});
+
+renderTable(filtered);
+
+}
+
+function renderTable(data=rawData){
 
 let html="<table><tr>";
 
-Object.keys(data[0]).forEach(key=>{
+Object.keys(rawData[0]).forEach(key=>{
 html+="<th>"+key+"</th>";
 });
 
@@ -74,27 +225,7 @@ document.getElementById("tableContainer").innerHTML=html;
 
 }
 
-function downloadCSV(){
-
-let csv="";
-let headers=Object.keys(sheetData[0]);
-
-csv+=headers.join(",")+"\n";
-
-sheetData.forEach(row=>{
-csv+=Object.values(row).join(",")+"\n";
-});
-
-let blob=new Blob([csv],{type:"text/csv"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="jain_census_data.csv";
-a.click();
-
-}
-
 </script>
 
 </body>
-
 </html>
