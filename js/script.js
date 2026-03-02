@@ -7,11 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loadingScreen");
   const percentText = document.getElementById("percent");
   const terminal = document.getElementById("terminalText");
-  const beep = document.getElementById("beepSound");
 
-  /* ==========================
-     MATRIX RAIN EFFECT
-  ========================== */
+  /* ===== MATRIX EFFECT ===== */
 
   const canvas = document.getElementById("matrixCanvas");
   const ctx = canvas.getContext("2d");
@@ -24,8 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const columns = canvas.width / fontSize;
   const drops = [];
 
-  for (let x = 0; x < columns; x++)
+  for (let x = 0; x < columns; x++) {
     drops[x] = 1;
+  }
 
   function drawMatrix() {
     ctx.fillStyle = "rgba(0,0,0,0.05)";
@@ -47,16 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setInterval(drawMatrix, 35);
 
-  /* ==========================
-     TERMINAL TEXT EFFECT
-  ========================== */
+  /* ===== TERMINAL TEXT ===== */
 
   const messages = [
     "Initializing Secure System...",
     "Scanning Database...",
-    "Verifying Encryption...",
-    "Accessing Foundation Records...",
-    "Loading Protected Data..."
+    "Decrypting Records...",
+    "Loading Protected Files..."
   ];
 
   let msgIndex = 0;
@@ -73,26 +68,19 @@ document.addEventListener("DOMContentLoaded", function () {
         charIndex = 0;
         msgIndex = (msgIndex + 1) % messages.length;
         typeEffect();
-      }, 1000);
+      }, 800);
     }
   }
 
   typeEffect();
 
-  /* ==========================
-     PERCENTAGE LOADER
-  ========================== */
+  /* ===== PERCENT COUNTER ===== */
 
   let percent = 0;
 
   const interval = setInterval(() => {
     percent++;
     percentText.innerText = percent + "%";
-
-    if (percent % 10 === 0) {
-      beep.currentTime = 0;
-      beep.play();
-    }
 
     if (percent >= 100) {
       clearInterval(interval);
@@ -106,6 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 1500);
     }
 
-  }, 90); // ~9 seconds total
+  }, 90); // 9 seconds total
 
 });

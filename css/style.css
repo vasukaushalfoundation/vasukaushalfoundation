@@ -561,3 +561,53 @@ footer {
   margin-top: 15px;
 }
 }
+
+
+
+/* ===== FULLSCREEN MATRIX LOADER ===== */
+
+#loadingScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background:black;
+  z-index:999999;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+#loadingScreen.hide{
+  opacity:0;
+  visibility:hidden;
+  transition:1s ease;
+}
+
+#matrixCanvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+
+.loader-content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  color:#00ff88;
+  font-family:monospace;
+}
+
+#terminalText{
+  font-size:18px;
+  margin-bottom:15px;
+}
+
+#percent{
+  font-size:30px;
+  font-weight:bold;
+}
