@@ -1,100 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
-  <style>
-    body{
-      margin:0;
-      font-family:Arial;
-      background:#f4f6f9;
-    }
-    .header{
-      background:#800000;
-      color:white;
-      padding:15px 20px;
-      font-size:18px;
-    }
-    .dashboard{
-      display:flex;
-      gap:20px;
-      padding:20px;
-    }
-    .card{
-      flex:1;
-      background:white;
-      padding:20px;
-      border-radius:10px;
-      box-shadow:0 3px 10px rgba(0,0,0,0.1);
-      text-align:center;
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      background:white;
-    }
-    th,td{
-      border:1px solid #ccc;
-      padding:6px;
-      font-size:13px;
-    }
-    th{
-      background:#800000;
-      color:white;
-    }
-  </style>
-</head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
 
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:20px;}
+table{width:100%;border-collapse:collapse;background:white;}
+th,td{border:1px solid #ccc;padding:8px;font-size:13px;}
+th{background:#800000;color:white;}
+button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom:15px;}
+</style>
+
+</head>
 <body>
 
-<div class="header">
-Secure Jain Census Admin Dashboard
-</div>
+<h2>Jain Census Admin Panel</h2>
 
-<div class="dashboard">
-  <div class="card">
-    <h3>Total Families</h3>
-    <h2 id="familyCount">0</h2>
-  </div>
-  <div class="card">
-    <h3>Total Members</h3>
-    <h2 id="memberCount">0</h2>
-  </div>
-</div>
+<button onclick="loadData()">Load Data</button>
+<button onclick="downloadCSV()">Download CSV</button>
 
-<div style="padding:20px;">
-  <div id="tableContainer"></div>
-</div>
+<div id="tableContainer"></div>
 
 <script>
 
-google.script.run.withSuccessHandler(function(data){
+let sheetData = [];
 
-let families={};
+function loadData(){
 
-data.forEach(row=>{
-let fam=row[2]; // Family ID column index
-if(!families[fam]) families[fam]=[];
-families[fam].push(row);
+fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
+.then(res=>res.json())
+.then(data=>{
+  sheetData = data;
+  renderTable(data);
 });
 
-document.getElementById("familyCount").innerText =
-Object.keys(families).length;
+}
 
-document.getElementById("memberCount").innerText =
-data.length;
+function renderTable(data){
+
+if(data.length===0){
+  document.getElementById("tableContainer").innerHTML="No Data Found";
+  return;
+}
 
 let html="<table><tr>";
 
-data[0].forEach((h)=>{
-html+="<th>"+h+"</th>";
+Object.keys(data[0]).forEach(key=>{
+html+="<th>"+key+"</th>";
 });
 
 html+="</tr>";
 
 data.forEach(row=>{
 html+="<tr>";
-row.forEach(col=>{
-html+="<td>"+col+"</td>";
+Object.values(row).forEach(val=>{
+html+="<td>"+val+"</td>";
 });
 html+="</tr>";
 });
@@ -103,7 +64,26 @@ html+="</table>";
 
 document.getElementById("tableContainer").innerHTML=html;
 
-}).getSheetData();
+}
+
+function downloadCSV(){
+
+let csv="";
+let headers=Object.keys(sheetData[0]);
+
+csv+=headers.join(",")+"\n";
+
+sheetData.forEach(row=>{
+csv+=Object.values(row).join(",")+"\n";
+});
+
+let blob=new Blob([csv],{type:"text/csv"});
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="jain_census_data.csv";
+a.click();
+
+}
 
 </script>
 
