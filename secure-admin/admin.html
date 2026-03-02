@@ -113,7 +113,7 @@ setTimeout(()=>{ loader.style.display="none"; },800);
 }
 
 function loadData(){
-fetch("YOUR_GOOGLE_SCRIPT_URL_HERE")
+fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
 sheetData=data||[];
@@ -346,3 +346,4 @@ if(percent>=100) clearInterval(int);
 </script>
 </body>
 </html>
+
