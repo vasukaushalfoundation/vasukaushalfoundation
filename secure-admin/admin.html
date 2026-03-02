@@ -1,3 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Jain Census Admin Panel</title>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:20px;}
+h2{margin-bottom:20px;}
+table{width:100%;border-collapse:collapse;background:white;margin-top:15px;}
+th,td{border:1px solid #ccc;padding:8px;font-size:13px;text-align:left;}
+th{background:#800000;color:white;}
+button{padding:8px 12px;background:#800000;color:white;border:none;margin:5px;cursor:pointer;}
+select{padding:6px;margin:5px;}
+.cardBox{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+min-width:200px;
+text-align:center;
+cursor:pointer;
+}
+#activeFilters span{
+background:#800000;
+color:white;
+padding:6px 12px;
+margin:5px;
+display:inline-block;
+border-radius:20px;
+cursor:pointer;
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Jain Census Admin Dashboard</h2>
+
+<div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
+
+<div class="cardBox">
+<h3>Total Families</h3>
+<h2 id="totalFamilies">0</h2>
+</div>
+
+<div class="cardBox">
+<h3>Total Members</h3>
+<h2 id="totalMembers">0</h2>
+</div>
+
+<div class="cardBox" onclick="filterCurrentMonthBirthdays()">
+<h3>Birthdays This Month</h3>
+<h2 id="monthBirthdays">0</h2>
+</div>
+
+</div>
+
+<hr>
+
+<h3>Smart Filters</h3>
+
+<select id="filterType" onchange="populateOptions()">
+<option value="">Select Filter Type</option>
+
+<option value="4">नाम</option>
+<option value="5">पिता/पति</option>
+<option value="6">लिंग</option>
+<option value="7">जन्मतिथि</option>
+<option value="8">संप्रदाय</option>
+<option value="9">सरनेम में जैन</option>
+<option value="10">गोत्र</option>
+<option value="11">पता</option>
+<option value="12">जिला</option>
+<option value="13">राज्य</option>
+<option value="14">वैवाहिक स्थिति</option>
+<option value="15">व्यवसाय</option>
+<option value="16">अन्य व्यवसाय</option>
+<option value="17">शिक्षा</option>
+<option value="18">मोबाइल</option>
+<option value="19">ईमेल</option>
+<option value="20">सदस्यता</option>
+<option value="21">दान (रु प्रतिमाह)</option>
+<option value="22">फॉर्म प्राप्त माध्यम</option>
+<option value="23">प्रतिनिधि नाम</option>
+
+</select>
+
+<select id="filterValue">
+<option value="">Select Option</option>
+</select>
+
+<button onclick="addFilter()">Add Filter</button>
+<button onclick="resetFilters()">Reset</button>
+<button onclick="downloadCSV()">Download CSV</button>
+
+<div id="activeFilters"></div>
+
+<div id="tableContainer"></div>
+
 <script>
 
 let sheetData = [];
@@ -21,17 +122,14 @@ fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut
 
 function processDashboard(data){
 
-// Total Members
 document.getElementById("totalMembers").innerText = data.length;
 
-// Total Families (Family ID index 2)
 let familySet = new Set();
 data.forEach(row=>{
 familySet.add(Object.values(row)[2]);
 });
 document.getElementById("totalFamilies").innerText = familySet.size;
 
-// Current Month Birthday Count (DOB index 7)
 let currentMonth = new Date().getMonth();
 let birthdayCount = 0;
 
@@ -45,11 +143,9 @@ birthdayCount++;
 }
 });
 document.getElementById("monthBirthdays").innerText = birthdayCount;
-
 }
 
 function filterCurrentMonthBirthdays(){
-
 let currentMonth = new Date().getMonth();
 
 let filtered = sheetData.filter(row=>{
@@ -68,10 +164,7 @@ renderTable(filtered);
 processDashboard(filtered);
 }
 
-// ===== SMART FILTER SYSTEM =====
-
 function populateOptions(){
-
 let colIndex = document.getElementById("filterType").value;
 let dropdown = document.getElementById("filterValue");
 
@@ -91,34 +184,28 @@ opt.value = val;
 opt.text = val;
 dropdown.appendChild(opt);
 });
-
 }
 
 function addFilter(){
-
 let colIndex = document.getElementById("filterType").value;
 let value = document.getElementById("filterValue").value;
 
 if(colIndex==="" || value==="") return;
 
-// duplicate filter prevent
 let exists = activeFilters.some(f=>f.col==colIndex && f.val==value);
 if(exists) return;
 
 activeFilters.push({col:colIndex,val:value});
-
 renderActiveFilters();
 applyAllFilters();
 }
 
 function renderActiveFilters(){
-
 let container = document.getElementById("activeFilters");
 container.innerHTML = "";
 
 activeFilters.forEach((f,index)=>{
 let chip = document.createElement("span");
-chip.style = "background:#800000;color:white;padding:6px 12px;margin:5px;display:inline-block;border-radius:20px;cursor:pointer;font-size:13px;";
 chip.innerText = f.val + " ✖";
 chip.onclick = function(){
 activeFilters.splice(index,1);
@@ -127,11 +214,9 @@ applyAllFilters();
 }
 container.appendChild(chip);
 });
-
 }
 
 function applyAllFilters(){
-
 let filtered = sheetData.filter(row=>{
 return activeFilters.every(f=>{
 return String(Object.values(row)[f.col]).toLowerCase() === f.val.toLowerCase();
@@ -150,8 +235,6 @@ currentData = sheetData;
 renderTable(sheetData);
 processDashboard(sheetData);
 }
-
-// ===== TABLE =====
 
 function renderTable(data){
 
@@ -179,13 +262,9 @@ html+="</tr>";
 html+="</table>";
 
 document.getElementById("tableContainer").innerHTML=html;
-
 }
 
-// ===== CSV DOWNLOAD =====
-
 function downloadCSV(){
-
 if(currentData.length===0){
 alert("No Data To Download");
 return;
@@ -193,7 +272,6 @@ return;
 
 let csv="";
 let headers=Object.keys(currentData[0]);
-
 csv+=headers.join(",")+"\n";
 
 currentData.forEach(row=>{
@@ -205,7 +283,9 @@ let a=document.createElement("a");
 a.href=URL.createObjectURL(blob);
 a.download="filtered_jain_census_data.csv";
 a.click();
-
 }
 
 </script>
+
+</body>
+</html>
