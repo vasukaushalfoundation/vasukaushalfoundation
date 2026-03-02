@@ -114,6 +114,19 @@ checkLoader();
 });
 }
 
+/* ===== DATE FORMAT FUNCTION ===== */
+
+function formatDate(dateString){
+let d = new Date(dateString);
+if(isNaN(d)) return dateString;
+
+let day = String(d.getDate()).padStart(2,'0');
+let month = String(d.getMonth()+1).padStart(2,'0');
+let year = d.getFullYear();
+
+return day + "-" + month + "-" + year;
+}
+
 function processDashboard(data){
 document.getElementById("totalMembers").innerText=data.length;
 
@@ -138,14 +151,25 @@ if(!data || data.length===0){
 document.getElementById("tableContainer").innerHTML="<b>No Data Found</b>";
 return;
 }
+
 let html="<table><tr>";
 Object.keys(data[0]).forEach(k=>html+="<th>"+k+"</th>");
 html+="</tr>";
+
 data.forEach(r=>{
 html+="<tr>";
-Object.values(r).forEach(v=>html+="<td>"+(v||"")+"</td>");
+Object.values(r).forEach(v=>{
+
+// ISO date detect karke format karo
+if(typeof v === "string" && v.includes("T") && v.includes("Z")){
+v = formatDate(v);
+}
+
+html+="<td>"+(v||"")+"</td>";
+});
 html+="</tr>";
 });
+
 html+="</table>";
 document.getElementById("tableContainer").innerHTML=html;
 }
@@ -215,7 +239,7 @@ renderTable(currentData);
 processDashboard(currentData);
 }
 
-/* MATRIX EFFECT */
+/* ===== MATRIX EFFECT ===== */
 
 function startMatrix(){
 const canvas=document.getElementById("matrixCanvas");
@@ -241,7 +265,7 @@ drops[i]++;
 setInterval(draw,33);
 }
 
-/* TYPING EFFECT */
+/* ===== TYPING EFFECT ===== */
 
 function startTyping(){
 let lines=["Initializing Secure System...",
@@ -265,7 +289,7 @@ terminal.innerHTML+="\n"; i++; j=0; setTimeout(type,200);
 type();
 }
 
-/* PERCENT COUNTER */
+/* ===== PERCENT COUNTER ===== */
 
 function startCounter(){
 let percent=0;
@@ -280,3 +304,4 @@ if(percent>=100) clearInterval(int);
 </script>
 </body>
 </html>
+
