@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -325,10 +326,19 @@ a.click();
 </script>
 
 </body>
-  <!-- LOADING SCREEN -->
+
 <div id="loadingScreen">
-  <div class="virusLoader"></div>
-  <h2>Loading Data...</h2>
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="loader-content">
+    <div class="terminal" id="terminalText"></div>
+    <div class="scan-line"></div>
+    <div class="percentage" id="percent">0%</div>
+  </div>
+
+  <audio id="beepSound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.wav" type="audio/wav">
+  </audio>
 </div>
-</html>
+ </html>
 
