@@ -29,7 +29,7 @@ text-align:center;
 cursor:pointer;
 }
 
-/* LOADING SCREEN */
+/* LOADER */
 
 #loadingScreen{
 position:fixed;
@@ -111,108 +111,55 @@ font-weight:bold;
 
 <script>
 
-/* MATRIX EFFECT */
+/* ===== LOADER CONTROL FLAGS ===== */
 
-const canvas = document.getElementById("matrixCanvas");
-const ctx = canvas.getContext("2d");
+let dataLoaded = false;
+let minTimePassed = false;
+let sheetData = [];
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+/* ===== WINDOW LOAD ===== */
 
-let letters = "01";
-letters = letters.split("");
+window.onload = function(){
 
-let fontSize = 14;
-let columns = canvas.width/fontSize;
-let drops = [];
-
-for(let x=0;x<columns;x++)
-drops[x]=1;
-
-function draw(){
-ctx.fillStyle="rgba(0,0,0,0.05)";
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle="#0f0";
-ctx.font=fontSize+"px monospace";
-
-for(let i=0;i<drops.length;i++){
-let text=letters[Math.floor(Math.random()*letters.length)];
-ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-drops[i]=0;
-
-drops[i]++;
-}
-}
-setInterval(draw,33);
-
-/* TERMINAL TYPING */
-
-let textLines=[
-"Initializing Secure System...",
-"Scanning Database...",
-"Encrypting Records...",
-"Bypassing Firewall...",
-"System Ready..."
-];
-
-let terminal=document.getElementById("terminalText");
-let lineIndex=0;
-let charIndex=0;
-
-function typeEffect(){
-if(lineIndex<textLines.length){
-if(charIndex<textLines[lineIndex].length){
-terminal.innerHTML+=textLines[lineIndex].charAt(charIndex);
-charIndex++;
-setTimeout(typeEffect,40);
-}else{
-terminal.innerHTML+="\n";
-lineIndex++;
-charIndex=0;
-setTimeout(typeEffect,300);
-}
-}
-}
-typeEffect();
-
-/* PERCENT COUNTER */
-
-let percent=0;
-let percentDiv=document.getElementById("percent");
-
-let interval=setInterval(()=>{
-percent++;
-percentDiv.innerText=percent+"%";
-if(percent>=100){
-clearInterval(interval);
-}
-},60);
-
-/* AUTO HIDE LOADER */
-
-window.onload=function(){
+// Minimum 8 sec timer
 setTimeout(()=>{
-document.getElementById("loadingScreen").style.display="none";
+    minTimePassed = true;
+    checkLoader();
+},8000);
+
+// Start data loading immediately
 loadData();
-},6000);
+
+startMatrix();
+startTyping();
+startCounter();
+
+};
+
+/* ===== CHECK LOADER ===== */
+
+function checkLoader(){
+if(dataLoaded && minTimePassed){
+    document.getElementById("loadingScreen").style.display="none";
+}
 }
 
-/* LOAD DATA */
-
-let sheetData=[];
+/* ===== DATA LOAD ===== */
 
 function loadData(){
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
-sheetData=data;
-processDashboard(data);
-renderTable(data);
+    sheetData=data;
+    processDashboard(data);
+    renderTable(data);
+
+    dataLoaded = true;
+    checkLoader();
 });
 }
+
+/* ===== DASHBOARD PROCESS ===== */
 
 function processDashboard(data){
 
@@ -238,6 +185,8 @@ birthdayCount++;
 });
 document.getElementById("monthBirthdays").innerText=birthdayCount;
 }
+
+/* ===== TABLE RENDER ===== */
 
 function renderTable(data){
 
@@ -265,6 +214,94 @@ html+="</tr>";
 html+="</table>";
 
 document.getElementById("tableContainer").innerHTML=html;
+}
+
+/* ===== MATRIX EFFECT ===== */
+
+function startMatrix(){
+
+const canvas=document.getElementById("matrixCanvas");
+const ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+let letters="01";
+letters=letters.split("");
+
+let fontSize=14;
+let columns=canvas.width/fontSize;
+let drops=[];
+
+for(let x=0;x<columns;x++) drops[x]=1;
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#0f0";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+let text=letters[Math.floor(Math.random()*letters.length)];
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
+}
+}
+setInterval(draw,33);
+}
+
+/* ===== TERMINAL EFFECT ===== */
+
+function startTyping(){
+
+let textLines=[
+"Initializing Secure System...",
+"Scanning Database...",
+"Encrypting Records...",
+"Verifying Identity...",
+"System Ready..."
+];
+
+let terminal=document.getElementById("terminalText");
+let lineIndex=0;
+let charIndex=0;
+
+function typeEffect(){
+if(lineIndex<textLines.length){
+if(charIndex<textLines[lineIndex].length){
+terminal.innerHTML+=textLines[lineIndex].charAt(charIndex);
+charIndex++;
+setTimeout(typeEffect,40);
+}else{
+terminal.innerHTML+="\n";
+lineIndex++;
+charIndex=0;
+setTimeout(typeEffect,300);
+}
+}
+}
+typeEffect();
+}
+
+/* ===== PERCENT COUNTER ===== */
+
+function startCounter(){
+
+let percent=0;
+let percentDiv=document.getElementById("percent");
+
+let interval=setInterval(()=>{
+percent++;
+percentDiv.innerText=percent+"%";
+if(percent>=100){
+clearInterval(interval);
+}
+},80);
+
 }
 
 </script>
