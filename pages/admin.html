@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:20px;}
+table{width:100%;border-collapse:collapse;background:white;}
+th,td{border:1px solid #ccc;padding:8px;font-size:13px;}
+th{background:#800000;color:white;}
+button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom:15px;}
+</style>
+
+</head>
+<body>
+
+<h2>Jain Census Admin Panel</h2>
+
+<button onclick="loadData()">Load Data</button>
+<button onclick="downloadCSV()">Download CSV</button>
+
+<div id="tableContainer"></div>
+
+<script>
+
+let sheetData = [];
+
+function loadData(){
+
+fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
+.then(res=>res.json())
+.then(data=>{
+  sheetData = data;
+  renderTable(data);
+});
+
+}
+
+function renderTable(data){
+
+if(data.length===0){
+  document.getElementById("tableContainer").innerHTML="No Data Found";
+  return;
+}
+
+let html="<table><tr>";
+
+Object.keys(data[0]).forEach(key=>{
+html+="<th>"+key+"</th>";
+});
+
+html+="</tr>";
+
+data.forEach(row=>{
+html+="<tr>";
+Object.values(row).forEach(val=>{
+html+="<td>"+val+"</td>";
+});
+html+="</tr>";
+});
+
+html+="</table>";
+
+document.getElementById("tableContainer").innerHTML=html;
+
+}
+
+function downloadCSV(){
+
+let csv="";
+let headers=Object.keys(sheetData[0]);
+
+csv+=headers.join(",")+"\n";
+
+sheetData.forEach(row=>{
+csv+=Object.values(row).join(",")+"\n";
+});
+
+let blob=new Blob([csv],{type:"text/csv"});
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="jain_census_data.csv";
+a.click();
+
+}
+
+</script>
+
+</body>
+</html>
