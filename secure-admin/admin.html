@@ -15,16 +15,58 @@ button{padding:8px 12px;background:#800000;color:white;border:none;margin-bottom
 </head>
 <body>
 
-<h2>Jain Census Admin Panel</h2>
+<h2>Jain Census Admin Dashboard</h2>
 
-<button onclick="loadData()">Load Data</button>
+<div style="display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
+
+<div class="cardBox">
+<h3>Total Families</h3>
+<h2 id="totalFamilies">0</h2>
+</div>
+
+<div class="cardBox">
+<h3>Total Members</h3>
+<h2 id="totalMembers">0</h2>
+</div>
+
+<div class="cardBox">
+<h3>Total Districts</h3>
+<h2 id="totalDistricts">0</h2>
+</div>
+
+<div class="cardBox">
+<h3>Birthdays This Month</h3>
+<h2 id="monthBirthdays">0</h2>
+</div>
+
+</div>
+
+<div id="locationWise"></div>
+
+<hr>
+
 <button onclick="downloadCSV()">Download CSV</button>
 
 <div id="tableContainer"></div>
 
+<style>
+.cardBox{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+min-width:200px;
+text-align:center;
+}
+</style>
+
 <script>
 
 let sheetData = [];
+
+window.onload = function(){
+loadData();
+}
 
 function loadData(){
 
@@ -32,16 +74,65 @@ fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut
 .then(res=>res.json())
 .then(data=>{
   sheetData = data;
+  processDashboard(data);
   renderTable(data);
 });
+
+}
+
+function processDashboard(data){
+
+// Total Members
+document.getElementById("totalMembers").innerText = data.length;
+
+// Total Families (unique Family ID column index 2)
+let familySet = new Set();
+data.forEach(row=>{
+familySet.add(Object.values(row)[2]);
+});
+document.getElementById("totalFamilies").innerText = familySet.size;
+
+// Location wise (District column index 12)
+let districtCount = {};
+data.forEach(row=>{
+let district = Object.values(row)[12];
+districtCount[district] = (districtCount[district] || 0) + 1;
+});
+
+document.getElementById("totalDistricts").innerText = Object.keys(districtCount).length;
+
+// Show location wise breakdown
+let locHTML = "<h3>Location Wise Members</h3><ul>";
+for(let d in districtCount){
+locHTML += `<li>${d} : ${districtCount[d]}</li>`;
+}
+locHTML += "</ul>";
+
+document.getElementById("locationWise").innerHTML = locHTML;
+
+// Current Month Birthdays (DOB column index 7)
+let currentMonth = new Date().getMonth();
+let birthdayCount = 0;
+
+data.forEach(row=>{
+let dob = Object.values(row)[7];
+if(dob){
+let dobDate = new Date(dob);
+if(dobDate.getMonth() === currentMonth){
+birthdayCount++;
+}
+}
+});
+
+document.getElementById("monthBirthdays").innerText = birthdayCount;
 
 }
 
 function renderTable(data){
 
 if(data.length===0){
-  document.getElementById("tableContainer").innerHTML="No Data Found";
-  return;
+document.getElementById("tableContainer").innerHTML="No Data Found";
+return;
 }
 
 let html="<table><tr>";
@@ -89,3 +180,4 @@ a.click();
 
 </body>
 </html>
+
