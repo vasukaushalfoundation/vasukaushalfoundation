@@ -41,12 +41,30 @@ transition:opacity 0.8s ease;
 </div>
 
 <div class="filterBox">
-<h3>DOB Range Filter</h3>
-From <input type="date" id="dobFrom">
-To <input type="date" id="dobTo">
-<button onclick="filterDOB()">Apply</button>
+
+<h3>Birthday Month Filter</h3>
+<select id="monthSelect">
+<option value="">Select Month</option>
+<option value="0">January</option>
+<option value="1">February</option>
+<option value="2">March</option>
+<option value="3">April</option>
+<option value="4">May</option>
+<option value="5">June</option>
+<option value="6">July</option>
+<option value="7">August</option>
+<option value="8">September</option>
+<option value="9">October</option>
+<option value="10">November</option>
+<option value="11">December</option>
+</select>
+
+<button onclick="applyFilters()">Apply Filter</button>
+<button onclick="downloadCSV()">Download Excel</button>
 <button onclick="resetAll()">Reset</button>
+
 <hr>
+
 <h3>Column Filter</h3>
 
 <select id="columnSelect" onchange="populateValues()">
@@ -57,7 +75,8 @@ To <input type="date" id="dobTo">
 <option value="">Select Value</option>
 </select>
 
-<button onclick="applyColumnFilter()">Apply Filter</button>
+<button onclick="applyFilters()">Apply Filter</button>
+
 </div>
 
 <div id="tableContainer"></div>
@@ -94,7 +113,7 @@ setTimeout(()=>{ loader.style.display="none"; },800);
 }
 
 function loadData(){
-fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
+fetch("YOUR_GOOGLE_SCRIPT_URL_HERE")
 .then(res=>res.json())
 .then(data=>{
 sheetData=data||[];
@@ -114,16 +133,12 @@ checkLoader();
 });
 }
 
-/* ===== DATE FORMAT FUNCTION ===== */
-
 function formatDate(dateString){
 let d = new Date(dateString);
 if(isNaN(d)) return dateString;
-
 let day = String(d.getDate()).padStart(2,'0');
 let month = String(d.getMonth()+1).padStart(2,'0');
 let year = d.getFullYear();
-
 return day + "-" + month + "-" + year;
 }
 
@@ -159,12 +174,9 @@ html+="</tr>";
 data.forEach(r=>{
 html+="<tr>";
 Object.values(r).forEach(v=>{
-
-// ISO date detect karke format karo
-if(typeof v === "string" && v.includes("T") && v.includes("Z")){
-v = formatDate(v);
+if(typeof v==="string" && v.includes("T") && v.includes("Z")){
+v=formatDate(v);
 }
-
 html+="<td>"+(v||"")+"</td>";
 });
 html+="</tr>";
@@ -177,7 +189,7 @@ document.getElementById("tableContainer").innerHTML=html;
 function populateColumns(){
 let col=document.getElementById("columnSelect");
 col.innerHTML='<option value="">Select Column</option>';
-if(!sheetData || sheetData.length===0) return;
+if(!sheetData.length) return;
 Object.keys(sheetData[0]).forEach((k,i)=>{
 let opt=document.createElement("option");
 opt.value=i;
@@ -196,7 +208,7 @@ if(colIndex==="") return;
 let unique=new Set();
 sheetData.forEach(r=>{
 let v=Object.values(r)[colIndex];
-if(v!==undefined && v!==null && v!=="") unique.add(v);
+if(v) unique.add(v);
 });
 Array.from(unique).sort().forEach(v=>{
 let opt=document.createElement("option");
@@ -206,40 +218,28 @@ valSel.appendChild(opt);
 });
 }
 
-function applyColumnFilter(){
+/* ===== COMBINED FILTER ===== */
+
+function applyFilters(){
+
+let month=document.getElementById("monthSelect").value;
 let col=document.getElementById("columnSelect").value;
 let val=document.getElementById("valueSelect").value;
-if(col===""||val==="") return;
-currentData=sheetData.filter(r=>String(Object.values(r)[col])===val);
-renderTable(currentData);
-processDashboard(currentData);
+
+currentData=sheetData.filter(r=>{
+
+if(month!==""){
+let dob=Object.values(r)[7];
+if(!dob) return false;
+let d=new Date(dob);
+if(isNaN(d) || d.getMonth()!=month) return false;
 }
 
-function filterDOB(){
+if(col!=="" && val!==""){
+if(String(Object.values(r)[col])!==val) return false;
+}
 
-let from=document.getElementById("dobFrom").value;
-let to=document.getElementById("dobTo").value;
-
-if(!from || !to) return;
-
-// Month-Day nikaal lo
-let fromDate = new Date(from);
-let toDate = new Date(to);
-
-let fromMD = (fromDate.getMonth()+1)*100 + fromDate.getDate();
-let toMD   = (toDate.getMonth()+1)*100 + toDate.getDate();
-
-currentData = sheetData.filter(r=>{
-
-let dob = Object.values(r)[7];
-if(!dob) return false;
-
-let d = new Date(dob);
-if(isNaN(d)) return false;
-
-let md = (d.getMonth()+1)*100 + d.getDate();
-
-return md >= fromMD && md <= toMD;
+return true;
 
 });
 
@@ -249,15 +249,48 @@ processDashboard(currentData);
 
 function resetAll(){
 currentData=sheetData;
-document.getElementById("dobFrom").value="";
-document.getElementById("dobTo").value="";
+document.getElementById("monthSelect").value="";
 document.getElementById("columnSelect").value="";
 document.getElementById("valueSelect").innerHTML='<option value="">Select Value</option>';
 renderTable(currentData);
 processDashboard(currentData);
 }
 
-/* ===== MATRIX EFFECT ===== */
+/* ===== CSV DOWNLOAD ===== */
+
+function downloadCSV(){
+if(!currentData.length){
+alert("No Data To Download");
+return;
+}
+let csv="";
+let headers=Object.keys(currentData[0]);
+csv+=headers.join(",")+"\n";
+
+currentData.forEach(r=>{
+let row=Object.values(r).map(v=>{
+if(typeof v==="string" && v.includes("T") && v.includes("Z")){
+let d=new Date(v);
+if(!isNaN(d)){
+let day=String(d.getDate()).padStart(2,'0');
+let month=String(d.getMonth()+1).padStart(2,'0');
+let year=d.getFullYear();
+return `"${day}-${month}-${year}"`;
+}
+}
+return `"${v||""}"`;
+}).join(",");
+csv+=row+"\n";
+});
+
+let blob=new Blob([csv],{type:"text/csv"});
+let link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download="Filtered_Data.csv";
+link.click();
+}
+
+/* ===== MATRIX ===== */
 
 function startMatrix(){
 const canvas=document.getElementById("matrixCanvas");
@@ -283,15 +316,8 @@ drops[i]++;
 setInterval(draw,33);
 }
 
-/* ===== TYPING EFFECT ===== */
-
 function startTyping(){
-let lines=["Initializing Secure System...",
-"Scanning Database...",
-"Encrypting Records...",
-"Verifying Identity...",
-"System Ready..."];
-
+let lines=["Initializing Secure System...","Scanning Database...","Encrypting Records...","Verifying Identity...","System Ready..."];
 let terminal=document.getElementById("terminalText");
 let i=0,j=0;
 function type(){
@@ -307,8 +333,6 @@ terminal.innerHTML+="\n"; i++; j=0; setTimeout(type,200);
 type();
 }
 
-/* ===== PERCENT COUNTER ===== */
-
 function startCounter(){
 let percent=0;
 let div=document.getElementById("percent");
@@ -322,5 +346,3 @@ if(percent>=100) clearInterval(int);
 </script>
 </body>
 </html>
-
-
