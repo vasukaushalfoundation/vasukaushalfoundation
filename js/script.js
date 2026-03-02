@@ -98,5 +98,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }, 90); // 9 seconds total
 
-
 });
