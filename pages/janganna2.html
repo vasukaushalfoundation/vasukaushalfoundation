@@ -6,6 +6,7 @@
 
 <style>
 body{font-family:Arial;margin:0;background:#f4f6f9;}
+
 .header{
 background:linear-gradient(45deg,#7a0000,#b30000);
 color:white;
@@ -13,6 +14,7 @@ padding:30px;
 text-align:center;
 line-height:1.8;
 }
+
 .container{
 max-width:1000px;
 margin:30px auto;
@@ -21,6 +23,7 @@ padding:30px;
 border-radius:10px;
 box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
+
 .section-title{
 margin-top:30px;
 font-weight:bold;
@@ -28,7 +31,9 @@ color:#800000;
 border-bottom:2px solid #800000;
 padding-bottom:5px;
 }
+
 label{font-weight:bold;margin-top:10px;display:block;}
+
 input, select, textarea{
 width:100%;
 padding:8px;
@@ -36,6 +41,7 @@ margin-top:5px;
 border-radius:6px;
 border:1px solid #ccc;
 }
+
 button{
 background:#800000;
 color:white;
@@ -45,6 +51,7 @@ border-radius:6px;
 cursor:pointer;
 margin-top:15px;
 }
+
 .member-block{
 border:1px solid #ddd;
 padding:15px;
@@ -53,6 +60,7 @@ border-radius:8px;
 background:#fafafa;
 position:relative;
 }
+
 .remove-btn{
 background:red;
 position:absolute;
@@ -61,6 +69,7 @@ top:10px;
 padding:5px 8px;
 font-size:12px;
 }
+
 .footer{
 background:#222;
 color:white;
@@ -68,6 +77,7 @@ text-align:center;
 padding:25px;
 margin-top:40px;
 }
+
 .footer a{color:#ffd700;text-decoration:none;font-weight:bold;}
 </style>
 </head>
@@ -76,6 +86,12 @@ margin-top:40px;
 
 <div class="header">
 <h1>जैन जनगणना प्रपत्र 2026</h1>
+परम पूज्य अभीक्ष्ण ज्ञानोपयोगी आचार्य श्री 108 वसुनंदी जी महाराज के पावन आशीर्वाद से 
+वसु कौशल फाउंडेशन समिति के तत्वावधान में जैन बंधुओं की सटीक, सुव्यवस्थित एवं प्रमाणिक जनगणना 
+के उद्देश्य से यह जैन जनगणना प्रपत्र तैयार किया गया है। इस जनगणना के माध्यम से समाज की वास्तविक 
+संख्या, संरचना एवं आवश्यकताओं की सही जानकारी प्राप्त की जाएगी, जिससे भविष्य में समाजहित के कार्यों 
+की बेहतर योजना बनाई जा सके। 
+<br><br>
 कृपया परिवार के सभी सदस्यों की जानकारी फॉर्म में भरें।
 </div>
 
@@ -83,13 +99,102 @@ margin-top:40px;
 
 <form id="familyForm">
 
+  <div class="section-title">परिवार विवरण</div>
+
+<label>संप्रदाय</label>
+<select id="sampraday" required>
+<option value="">-- चयन करें --</option>
+<option>दिगम्बर</option>
+<option>श्वेताम्बर</option>
+</select>
+
+<label>सरनेम में जैन लिखते हैं?</label>
+<select id="jainSurname" required>
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
+<label>गोत्र</label>
+<input type="text" id="gotra">
+
+<label>पूरा पता</label>
+<textarea id="address" required></textarea>
+
+<label>पिन कोड</label>
+<input type="text" id="pincode" maxlength="6" onblur="fetchLocation()" required>
+
+<label>जिला</label>
+<input type="text" id="district" required>
+
+<label>राज्य</label>
+<input type="text" id="state" required>
+
+<label>ईमेल</label>
+<input type="email" id="email">
+
+
 <div class="section-title">परिवार सदस्य विवरण</div>
+
 <div id="members"></div>
 <button type="button" onclick="addMember()">+ सदस्य जोड़ें</button>
+
+<div class="section-title">सदस्यता</div>
+
+<label>क्या आप संस्था के सदस्य बनना चाहेंगे?</label>
+<select id="membership" required>
+<option value="">-- चयन करें --</option>
+<option>हाँ</option>
+<option>नहीं</option>
+</select>
+
+<div class="section-title">दान सहयोग</div>
+
+<label>
+क्या आप अपनी चंचल लक्ष्मी को समाज सेवा एवं जिनशासन की उन्नति के पावन कार्यों में समर्पित करना चाहेंगे?
+</label>
+
+<select id="donationSelect" onchange="toggleDonationAmount()">
+<option value="">-- चयन करें --</option>
+<option value="हाँ">हाँ</option>
+<option value="अभी नहीं">अभी नहीं</option>
+</select>
+
+<div id="donationAmountBox" style="display:none;">
+<label>रुपये प्रतिमाह</label>
+<input id="donationAmount">
+</div>
+
+<div class="section-title">फॉर्म प्राप्त माध्यम</div>
+
+<label>यह फॉर्म आपको किस माध्यम से प्राप्त हुआ है?</label>
+<select id="sourceSelect" onchange="toggleRepresentative()">
+<option value="">-- चयन करें --</option>
+<option>मंदिर जी</option>
+<option>पंचकल्याणक</option>
+<option>अन्य धार्मिक कार्यक्रम</option>
+<option value="संस्था प्रतिनिधि">संस्था प्रतिनिधि</option>
+<option>SMS/WhatsApp</option>
+<option>अन्य</option>
+</select>
+
+<div id="repNameBox" style="display:none;">
+<label>संस्था प्रतिनिधि का नाम</label>
+<input id="representativeName">
+</div>
 
 <button type="submit">प्रपत्र जमा करें</button>
 
 </form>
+
+</div>
+
+<div class="footer">
+<b>किसी भी प्रकार की सहायता हेतु संपर्क करें</b><br><br>
+<a href="tel:8094807020">📞 8094807020</a> |
+<a href="https://wa.me/919376481008" target="_blank">💬 9376481008 (WhatsApp)</a><br><br>
+<a href="https://www.vasukaushalfoundation.in" target="_blank">🌐 www.vasukaushalfoundation.in</a> |
+<a href="https://www.instagram.com/vasu_kaushal_foundation/" target="_blank">📷 Instagram</a>
 </div>
 
 <script>
@@ -100,16 +205,6 @@ memberCount++;
 
 let div=document.createElement("div");
 div.className="member-block";
-
-let donationField="";
-
-// ✅ सिर्फ पहले सदस्य के लिए दान राशि दिखेगी
-if(memberCount===1){
-donationField=`
-<label>दान राशि (रुपये प्रतिमाह)</label>
-<input type="number" class="memberDonation">
-`;
-}
 
 div.innerHTML=`
 <b>सदस्य ${memberCount}</b>
@@ -132,7 +227,46 @@ div.innerHTML=`
 <label>जन्मतिथि</label>
 <input type="date" required>
 
-${donationField}
+<label>वैवाहिक स्थिति</label>
+<select>
+<option value="">-- चयन करें --</option>
+<option>विवाहित</option>
+<option>अविवाहित</option>
+<option>विधवा</option>
+<option>विधुर</option>
+<option>तलाकशुदा</option>
+</select>
+
+<label>व्यवसाय</label>
+<select onchange="toggleOther(this)">
+<option value="">-- चयन करें --</option>
+<option>व्यापार</option>
+<option>नौकरी</option>
+<option>डॉक्टर</option>
+<option>इंजीनियर</option>
+<option>शिक्षक</option>
+<option>विद्यार्थी</option>
+<option>गृहिणी</option>
+<option>सेवानिवृत्त</option>
+<option value="अन्य">अन्य</option>
+</select>
+
+<div class="otherBox" style="display:none;">
+<label>अन्य व्यवसाय</label>
+<input>
+</div>
+
+<label>शिक्षा</label>
+<select>
+<option value="">-- चयन करें --</option>
+<option>प्राथमिक</option>
+<option>माध्यमिक</option>
+<option>उच्च माध्यमिक</option>
+<option>स्नातक</option>
+<option>स्नातकोत्तर</option>
+<option>डॉक्टरेट</option>
+<option>अन्य</option>
+</select>
 
 <label>मोबाइल</label>
 <input type="tel">
@@ -143,60 +277,126 @@ document.getElementById("members").appendChild(div);
 
 function updateNumbering(){
 memberCount=0;
-document.querySelectorAll(".member-block").forEach((b,index)=>{
+document.querySelectorAll(".member-block").forEach(b=>{
 memberCount++;
 b.querySelector("b").innerText="सदस्य "+memberCount;
-
-// ❗ अगर पहला सदस्य हट गया तो नए पहले में donation जोड़ दो
-if(index===0 && !b.querySelector(".memberDonation")){
-let donationHTML=`
-<label>दान राशि (रुपये प्रतिमाह)</label>
-<input type="number" class="memberDonation">
-`;
-b.insertAdjacentHTML("beforeend", donationHTML);
-}
-
-// बाकी सदस्यों से donation हटा दो
-if(index!==0){
-let donation=b.querySelector(".memberDonation");
-if(donation){
-donation.parentElement.removeChild(donation.previousElementSibling);
-donation.remove();
-}
-}
 });
 }
 
+function toggleDonationAmount(){
+document.getElementById("donationAmountBox").style.display=
+document.getElementById("donationSelect").value==="हाँ"?"block":"none";
+}
+
+function toggleRepresentative(){
+document.getElementById("repNameBox").style.display=
+document.getElementById("sourceSelect").value==="संस्था प्रतिनिधि"?"block":"none";
+}
+
+function toggleOther(sel){
+let box=sel.parentElement.querySelector(".otherBox");
+box.style.display=(sel.value==="अन्य")?"block":"none";
+}
+
 window.onload=addMember;
+</script>
+
+</body>
+</html>
+
+
+<script>
+function fetchLocation() {
+  var pincode = document.getElementById("pincode").value;
+
+  if (pincode.length !== 6 || isNaN(pincode)) {
+    return;
+  }
+
+  document.getElementById("district").value = "लोड हो रहा है...";
+  document.getElementById("state").value = "";
+
+  fetch("https://api.postalpincode.in/pincode/" + pincode)
+    .then(response => response.json())
+    .then(data => {
+      if (data[0].Status === "Success") {
+        document.getElementById("district").value = data[0].PostOffice[0].District;
+        document.getElementById("state").value = data[0].PostOffice[0].State;
+      } else {
+        alert("गलत पिन कोड");
+        document.getElementById("district").value = "";
+        document.getElementById("state").value = "";
+      }
+    })
+    .catch(error => {
+      alert("Location fetch नहीं हो पाया");
+    });
+}
+</script>
+
+<script>
 
 document.getElementById("familyForm").addEventListener("submit", function(e){
 e.preventDefault();
 
-let members=[];
+let members = [];
 
-document.querySelectorAll(".member-block").forEach((block,index)=>{
-let inputs=block.querySelectorAll("input, select");
-
-let donation="";
-if(index===0){
-let d=block.querySelector(".memberDonation");
-donation=d?d.value:"";
-}
+document.querySelectorAll(".member-block").forEach(block=>{
+let inputs = block.querySelectorAll("input, select");
 
 members.push({
 name: inputs[0].value,
 father: inputs[1].value,
 gender: inputs[2].value,
 dob: inputs[3].value,
-mobile: inputs[4]?inputs[4].value:"",
-donation: donation
+marital: inputs[4].value,
+occupation: inputs[5].value,
+otherOccupation: block.querySelector(".otherBox input") ? block.querySelector(".otherBox input").value : "",
+education: inputs[7].value,
+mobile: inputs[8].value
 });
 });
 
-console.log(members);
+let formData = {
+formId: "FAM-" + Date.now(),
+members: members,
+sampraday: document.getElementById("sampraday").value,
+jainSurname: document.getElementById("jainSurname").value,
+gotra: document.getElementById("gotra").value,
+address: document.getElementById("address").value,
+district: document.getElementById("district").value,
+state: document.getElementById("state").value,
+email: document.getElementById("email").value,
+membership: document.getElementById("membership").value,
+dan: document.getElementById("donationAmount").value,
+source: document.getElementById("sourceSelect").value,
+representative: document.getElementById("representativeName").value
+};
+
+// Hidden form create
+let form = document.createElement("form");
+form.method = "POST";
+form.action = "https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec";
+form.target = "hidden_iframe";
+
+let input = document.createElement("input");
+input.type = "hidden";
+input.name = "data";
+input.value = JSON.stringify(formData);
+
+form.appendChild(input);
+document.body.appendChild(form);
+
+form.submit();
+
 alert("प्रपत्र सफलतापूर्वक जमा हो गया ✅");
+
+document.getElementById("familyForm").reset();
+document.getElementById("members").innerHTML="";
+addMember();
+
 });
+
 </script>
 
-</body>
-</html>
+<iframe name="hidden_iframe" style="display:none;"></iframe>
