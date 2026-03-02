@@ -1,3 +1,5 @@
+alert("JS Loaded");
+
 function toggleMenu() {
   document.getElementById("mobileMenu").classList.toggle("show");
 }
@@ -95,5 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
   }, 90); // 9 seconds total
+
 
 });
