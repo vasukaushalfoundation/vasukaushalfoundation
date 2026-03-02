@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,13 +5,20 @@
 <title>Jain Census Admin Panel</title>
 
 <style>
-body{font-family:Arial;background:#f4f6f9;padding:20px;}
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:20px;
+margin:0;
+}
+
 h2{margin-bottom:20px;}
 table{width:100%;border-collapse:collapse;background:white;margin-top:15px;}
 th,td{border:1px solid #ccc;padding:8px;font-size:13px;text-align:left;}
 th{background:#800000;color:white;}
 button{padding:8px 12px;background:#800000;color:white;border:none;margin:5px;cursor:pointer;}
 select,input{padding:6px;margin:5px;}
+
 .cardBox{
 background:white;
 padding:20px;
@@ -22,15 +28,49 @@ min-width:200px;
 text-align:center;
 cursor:pointer;
 }
-#activeFilters span{
-background:#800000;
-color:white;
-padding:6px 12px;
-margin:5px;
-display:inline-block;
-border-radius:20px;
-cursor:pointer;
-font-size:13px;
+
+/* LOADING SCREEN */
+
+#loadingScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+color:#00ff00;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+overflow:hidden;
+}
+
+#matrixCanvas{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+.loader-content{
+position:relative;
+z-index:2;
+text-align:center;
+}
+
+#terminalText{
+font-family:monospace;
+font-size:18px;
+margin-bottom:20px;
+white-space:pre-line;
+}
+
+#percent{
+font-size:40px;
+font-weight:bold;
 }
 </style>
 </head>
@@ -51,227 +91,152 @@ font-size:13px;
 <h2 id="totalMembers">0</h2>
 </div>
 
-<div class="cardBox" onclick="filterCurrentMonthBirthdays()">
+<div class="cardBox">
 <h3>Birthdays This Month</h3>
 <h2 id="monthBirthdays">0</h2>
 </div>
 
 </div>
 
-<hr>
-
-<h3>DOB Range Filter</h3>
-From: <input type="date" id="dobFrom">
-To: <input type="date" id="dobTo">
-<button onclick="filterDOBRange()">Apply DOB Filter</button>
-
-<hr>
-
-<h3>Smart Filters</h3>
-
-<select id="filterType" onchange="populateOptions()">
-<option value="">Select Filter Type</option>
-
-<option value="4">नाम</option>
-<option value="5">पिता/पति</option>
-<option value="6">लिंग</option>
-<option value="7">जन्मतिथि</option>
-<option value="8">संप्रदाय</option>
-<option value="9">सरनेम में जैन</option>
-<option value="10">गोत्र</option>
-<option value="11">पता</option>
-<option value="12">जिला</option>
-<option value="13">राज्य</option>
-<option value="14">वैवाहिक स्थिति</option>
-<option value="15">व्यवसाय</option>
-<option value="16">अन्य व्यवसाय</option>
-<option value="17">शिक्षा</option>
-<option value="18">मोबाइल</option>
-<option value="19">ईमेल</option>
-<option value="20">सदस्यता</option>
-<option value="21">दान (रु प्रतिमाह)</option>
-<option value="22">फॉर्म प्राप्त माध्यम</option>
-<option value="23">प्रतिनिधि नाम</option>
-
-</select>
-
-<select id="filterValue">
-<option value="">Select Option</option>
-</select>
-
-<button onclick="addFilter()">Add Filter</button>
-<button onclick="resetFilters()">Reset</button>
-<button onclick="downloadCSV()">Download CSV</button>
-
-<div id="activeFilters"></div>
-
 <div id="tableContainer"></div>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen">
+  <canvas id="matrixCanvas"></canvas>
+  <div class="loader-content">
+    <div id="terminalText"></div>
+    <div id="percent">0%</div>
+  </div>
+</div>
 
 <script>
 
-let sheetData = [];
-let currentData = [];
-let activeFilters = [];
+/* MATRIX EFFECT */
 
-window.onload = function(){
-loadData();
+const canvas = document.getElementById("matrixCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+let letters = "01";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width/fontSize;
+let drops = [];
+
+for(let x=0;x<columns;x++)
+drops[x]=1;
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#0f0";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+let text=letters[Math.floor(Math.random()*letters.length)];
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
 }
+}
+setInterval(draw,33);
+
+/* TERMINAL TYPING */
+
+let textLines=[
+"Initializing Secure System...",
+"Scanning Database...",
+"Encrypting Records...",
+"Bypassing Firewall...",
+"System Ready..."
+];
+
+let terminal=document.getElementById("terminalText");
+let lineIndex=0;
+let charIndex=0;
+
+function typeEffect(){
+if(lineIndex<textLines.length){
+if(charIndex<textLines[lineIndex].length){
+terminal.innerHTML+=textLines[lineIndex].charAt(charIndex);
+charIndex++;
+setTimeout(typeEffect,40);
+}else{
+terminal.innerHTML+="\n";
+lineIndex++;
+charIndex=0;
+setTimeout(typeEffect,300);
+}
+}
+}
+typeEffect();
+
+/* PERCENT COUNTER */
+
+let percent=0;
+let percentDiv=document.getElementById("percent");
+
+let interval=setInterval(()=>{
+percent++;
+percentDiv.innerText=percent+"%";
+if(percent>=100){
+clearInterval(interval);
+}
+},60);
+
+/* AUTO HIDE LOADER */
+
+window.onload=function(){
+setTimeout(()=>{
+document.getElementById("loadingScreen").style.display="none";
+loadData();
+},6000);
+}
+
+/* LOAD DATA */
+
+let sheetData=[];
 
 function loadData(){
 fetch("https://script.google.com/macros/s/AKfycbykJHnlG-TazPHuhPF_0IOOy5sV_CeIut0QT9wUQ_REf0Mw-Q_iKo6yIZBdh5TRIqW23A/exec")
 .then(res=>res.json())
 .then(data=>{
-  sheetData = data;
-  currentData = data;
-  processDashboard(data);
-  renderTable(data);
+sheetData=data;
+processDashboard(data);
+renderTable(data);
 });
 }
 
 function processDashboard(data){
 
-document.getElementById("totalMembers").innerText = data.length;
+document.getElementById("totalMembers").innerText=data.length;
 
-let familySet = new Set();
+let familySet=new Set();
 data.forEach(row=>{
 familySet.add(Object.values(row)[2]);
 });
-document.getElementById("totalFamilies").innerText = familySet.size;
+document.getElementById("totalFamilies").innerText=familySet.size;
 
-let currentMonth = new Date().getMonth();
-let birthdayCount = 0;
+let currentMonth=new Date().getMonth();
+let birthdayCount=0;
 
 data.forEach(row=>{
-let dob = Object.values(row)[7];
+let dob=Object.values(row)[7];
 if(dob){
-let dobDate = new Date(dob);
-if(dobDate.getMonth() === currentMonth){
+let dobDate=new Date(dob);
+if(dobDate.getMonth()===currentMonth){
 birthdayCount++;
 }
 }
 });
-document.getElementById("monthBirthdays").innerText = birthdayCount;
-}
-
-function filterCurrentMonthBirthdays(){
-let currentMonth = new Date().getMonth();
-
-let filtered = sheetData.filter(row=>{
-let dob = Object.values(row)[7];
-if(dob){
-let dobDate = new Date(dob);
-return dobDate.getMonth() === currentMonth;
-}
-return false;
-});
-
-currentData = filtered;
-activeFilters = [];
-document.getElementById("activeFilters").innerHTML="";
-renderTable(filtered);
-processDashboard(filtered);
-}
-
-function filterDOBRange(){
-
-let from = document.getElementById("dobFrom").value;
-let to = document.getElementById("dobTo").value;
-
-if(!from || !to){
-alert("Please select both dates");
-return;
-}
-
-let fromDate = new Date(from);
-let toDate = new Date(to);
-
-fromDate.setHours(0,0,0,0);
-toDate.setHours(23,59,59,999);
-
-let filtered = sheetData.filter(row=>{
-let dob = Object.values(row)[7];
-if(!dob) return false;
-let rowDate = new Date(dob);
-return rowDate >= fromDate && rowDate <= toDate;
-});
-
-currentData = filtered;
-renderTable(filtered);
-processDashboard(filtered);
-}
-
-function populateOptions(){
-let colIndex = document.getElementById("filterType").value;
-let dropdown = document.getElementById("filterValue");
-
-dropdown.innerHTML = '<option value="">Select Option</option>';
-if(colIndex==="") return;
-
-let unique = new Set();
-
-sheetData.forEach(row=>{
-let val = Object.values(row)[colIndex];
-if(val && val!=="") unique.add(val);
-});
-
-[...unique].sort().forEach(val=>{
-let opt = document.createElement("option");
-opt.value = val;
-opt.text = val;
-dropdown.appendChild(opt);
-});
-}
-
-function addFilter(){
-let colIndex = document.getElementById("filterType").value;
-let value = document.getElementById("filterValue").value;
-
-if(colIndex==="" || value==="") return;
-
-let exists = activeFilters.some(f=>f.col==colIndex && f.val==value);
-if(exists) return;
-
-activeFilters.push({col:colIndex,val:value});
-renderActiveFilters();
-applyAllFilters();
-}
-
-function renderActiveFilters(){
-let container = document.getElementById("activeFilters");
-container.innerHTML = "";
-
-activeFilters.forEach((f,index)=>{
-let chip = document.createElement("span");
-chip.innerText = f.val + " ✖";
-chip.onclick = function(){
-activeFilters.splice(index,1);
-renderActiveFilters();
-applyAllFilters();
-}
-container.appendChild(chip);
-});
-}
-
-function applyAllFilters(){
-let filtered = sheetData.filter(row=>{
-return activeFilters.every(f=>{
-return String(Object.values(row)[f.col]).toLowerCase() === f.val.toLowerCase();
-});
-});
-
-currentData = filtered;
-renderTable(filtered);
-processDashboard(filtered);
-}
-
-function resetFilters(){
-activeFilters = [];
-document.getElementById("activeFilters").innerHTML="";
-document.getElementById("dobFrom").value="";
-document.getElementById("dobTo").value="";
-currentData = sheetData;
-renderTable(sheetData);
-processDashboard(sheetData);
+document.getElementById("monthBirthdays").innerText=birthdayCount;
 }
 
 function renderTable(data){
@@ -302,36 +267,7 @@ html+="</table>";
 document.getElementById("tableContainer").innerHTML=html;
 }
 
-function downloadCSV(){
-if(currentData.length===0){
-alert("No Data To Download");
-return;
-}
+</script>
 
-let csv="";
-let headers=Object.keys(currentData[0]);
-csv+=headers.join(",")+"\n";
-
-currentData.forEach(row=>{
-csv+=Object.values(row).join(",")+"\n";
-});
-
-let blob=new Blob([csv],{type:"text/csv"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="filtered_jain_census_data.csv";
-a.click();
-}
-
-
-<script src="script.js"></script>
 </body>
-
-<div id="loadingScreen">
-  <canvas id="matrixCanvas"></canvas>
-  <div class="loader-content">
-    <div id="terminalText"></div>
-    <div id="percent">0%</div>
-  </div>
-</div> </html>
-
+</html>
